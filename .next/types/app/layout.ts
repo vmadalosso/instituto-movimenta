@@ -1,4 +1,4 @@
-// File: /Users/vitormadalosso/dev/open-source /instituto-movimenta/src/app/layout.tsx
+// File: /Users/vitormadalosso/dev/community/instituto-movimenta/src/app/layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
