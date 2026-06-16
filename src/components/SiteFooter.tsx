@@ -36,7 +36,10 @@ export function SiteFooter() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 rounded-full"
               />
-              <Button type="submit" className="rounded-full">
+              <Button
+                type="submit"
+                className="rounded-full border-1 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 transition-colors font-semibold"
+              >
                 {done ? "Inscrito ✓" : "Inscrever"}
               </Button>
             </form>
