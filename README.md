@@ -1,187 +1,223 @@
-# Instituto Movimenta
+<h1 align="center">Instituto Movimenta</h1>
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.5.10-black)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2.4-38B2AC)](https://tailwindcss.com/)
-[![Bun](https://img.shields.io/badge/Bun-1.3.13-FFDF00)](https://bun.sh/)
+<p align="center">
+  Site institucional da ONG Instituto Movimenta — "A saída é coletiva."
+</p>
 
-> "A saída é coletiva" — Instituto Movimenta
+<p align="center">
+  <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=BD93F9&labelColor=282A36">
+  <img alt="Bun" src="https://img.shields.io/static/v1?label=runtime&message=Bun&color=FFDF00&labelColor=282A36">
+  <img alt="TypeScript" src="https://img.shields.io/static/v1?label=lang&message=TypeScript&color=8BE9FD&labelColor=282A36">
+  <img alt="Next.js" src="https://img.shields.io/static/v1?label=framework&message=Next.js+15&color=50FA7B&labelColor=282A36">
+</p>
 
-Website oficial do Instituto Movimenta, ONG do Rio Grande do Sul que atua em solidariedade, educação, esporte, cultura e lazer, promovendo transformação social através de ações comunitárias.
+<p align="center">
+  <a href="#about">About</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#tech-stack">Tech Stack</a> ·
+  <a href="#screenshots">Screenshots</a> ·
+  <a href="#getting-started">Getting Started</a> ·
+  <a href="#deployment">Deployment</a> ·
+  <a href="#running-tests">Running Tests</a> ·
+  <a href="#volunteer-context">Volunteer Context</a>
+</p>
 
-## 🌟 Sobre o Projeto
+---
 
-O Instituto Movimenta é uma organização sem fins lucrativos que trabalha para construir uma sociedade mais justa e solidária. Nosso website serve como plataforma digital para:
+## About
 
-- **Divulgar nossas ações** e projetos sociais
-- **Conectar voluntários** com oportunidades de atuação
-- **Receber doações** e apoios para nossas iniciativas
-- **Informar sobre cursos** e capacitações oferecidas
-- **Compartilhar nossa missão** e valores
+**Instituto Movimenta** é uma ONG do Rio Grande do Sul que atua em solidariedade, educação, esporte, cultura e meio ambiente, promovendo transformação social através de ações comunitárias.
 
-## 🚀 Tecnologias
+Este repositório é o site institucional da organização. Serve como plataforma digital para divulgar projetos, conectar voluntários, receber inscrições no cursinho popular e captar doações.
 
-### Core
+---
 
-- **[Next.js 15](https://nextjs.org/)** — React framework com App Router
-- **[TypeScript](https://www.typescriptlang.org/)** — Tipagem estática
-- **[React 18](https://react.dev/)** — Biblioteca para interfaces
+## Features
 
-### UI & Styling
+- **Home institucional** — apresentação da ONG e chamada para ação
+- **Quem Somos** — história, missão, visão e valores
+- **Projetos** — as 5 frentes de atuação (solidariedade, educação, esporte, cultura, meio ambiente)
+- **Cidades** — municípios atendidos no RS
+- **Cursinho Popular** — inscrição com formulário validado
+- **Voluntariado** — cadastro de voluntários com formulário validado
+- **Doações** — formulário de doação (integração com gateway a definir)
+- **Contato** — formulário de contato
+- **Design responsivo** — mobile-first, acessível
 
-- **[Tailwind CSS 4](https://tailwindcss.com/)** — Framework CSS utilitário
-- **[Radix UI](https://www.radix-ui.com/)** — Componentes acessíveis e headless
-- **[Lucide React](https://lucide.dev/)** — Ícones modernos
-- **[Tailwind Animate](https://github.com/jamiebuilds/tw-animate-css)** — Animações CSS
+---
 
-### Formulários & Validação
+## Tech Stack
 
-- **[React Hook Form](https://react-hook-form.com/)** — Gerenciamento de formulários
-- **[Zod](https://zod.dev/)** — Validação de schemas
-- **[@hookform/resolvers](https://github.com/react-hook-form/resolvers)** — Integração Zod + RHF
+### Frontend
+| Ferramenta | Finalidade |
+|---|---|
+| Next.js 15 (App Router) | Framework full-stack |
+| TypeScript | Tipagem estática |
+| Tailwind CSS v4 | Estilização utility-first |
+| shadcn/ui (new-york) | Componentes acessíveis (sobre Radix UI) |
+| React Hook Form + Zod | Formulários e validação |
+| Lucide React | Ícones |
 
-### Desenvolvimento
+### Backend
+| Ferramenta | Finalidade |
+|---|---|
+| Next.js Route Handlers | API endpoints (serverless) |
+| Supabase | Banco de dados PostgreSQL gerenciado |
+| Zod | Validação server-side |
 
-- **[Bun](https://bun.sh/)** — Runtime e package manager ultrarrápido
-- **[ESLint](https://eslint.org/)** — Linting e qualidade de código
-- **[Prettier](https://prettier.io/)** — Formatação automática
-- **[Vitest](https://vitest.dev/)** — Framework de testes
+### Infrastructure
+| Ferramenta | Finalidade |
+|---|---|
+| Vercel | Deploy e hosting |
+| Supabase | PostgreSQL + auth + storage |
+| Bun | Package manager e runtime |
 
-### Deploy & Infra
+---
 
-- **[Vercel](https://vercel.com/)** — Plataforma de deploy
-- **[Cloudflare](https://cloudflare.com/)** — CDN e proteção
+## Screenshots
 
-## 📁 Estrutura do Projeto
+<p align="center">
+  <img src="./public/screenshots/home.png" alt="Página inicial" width="80%"/>
+</p>
+<p align="center"><em>Página inicial</em></p>
+
+---
+
+## Getting Started
+
+### Pré-requisitos
+
+- [Bun](https://bun.sh/) >= 1.x
+- Uma conta no [Supabase](https://supabase.com) (para rodar com backend)
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/vmadalosso/instituto-movimenta.git
+cd instituto-movimenta
+```
+
+### 2. Instale as dependências
+
+```bash
+bun install
+```
+
+### 3. Configure as variáveis de ambiente
+
+```bash
+cp .env.example .env.local
+```
+
+```env
+NEXT_PUBLIC_SUPABASE_URL="https://<seu-projeto>.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="<anon-key>"
+SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
+```
+
+> Para rodar apenas o frontend (sem persistência), as variáveis do Supabase podem ser omitidas — os formulários funcionam em modo stub.
+
+### 4. Execute o projeto
+
+```bash
+bun run dev
+```
+
+Acesse: [http://localhost:3000](http://localhost:3000)
+
+### Scripts disponíveis
+
+```bash
+bun run dev          # Servidor de desenvolvimento
+bun run build        # Build de produção
+bun run start        # Servidor de produção local
+bun run lint         # ESLint
+bun run format       # Prettier
+bun run test         # Vitest (run único)
+bun run test:watch   # Vitest em modo watch
+```
+
+---
+
+## Deployment
+
+O projeto é uma aplicação Next.js única, deployada na Vercel com Supabase como banco de dados.
+
+### Passo 1 — Crie o projeto no Supabase
+
+1. [supabase.com](https://supabase.com) → **New Project**
+2. Copie a **Project URL** e as chaves **anon** e **service_role**
+
+### Passo 2 — Deploy na Vercel
+
+1. [vercel.com](https://vercel.com) → **New Project** → importe este repositório
+2. Configure as variáveis de ambiente:
+
+| Variável | Valor |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave anon pública |
+| `SUPABASE_SERVICE_ROLE_KEY` | Chave service role (apenas server-side) |
+
+3. Deploy
+
+---
+
+## Running Tests
+
+```bash
+bun run test
+```
+
+Os testes ficam co-localizados com os arquivos testados (`*.test.ts`). Cobertura atual: schemas Zod e API routes.
+
+---
+
+## Project Structure
 
 ```
 src/
 ├── app/                    # Next.js App Router
-│   ├── api/               # API Routes (backend futuro)
-│   │   ├── contato/       # API contato
-│   │   ├── cursinho/      # API cursos
-│   │   ├── doacoes/       # API doações
-│   │   └── voluntario/    # API voluntariado
-│   ├── cidades/           # Página cidades atendidas
-│   ├── contato/           # Página contato + formulário
-│   ├── cursinho/          # Página cursos oferecidos
-│   ├── doacoes/           # Página doações + formulário
-│   ├── projetos/          # Página projetos sociais
-│   ├── quem-somos/        # Página sobre nós
-│   ├── voluntario/        # Página voluntariado + formulário
-│   ├── globals.css        # Estilos globais
-│   ├── layout.tsx         # Layout raiz
-│   └── page.tsx           # Página inicial
-├── components/            # Componentes reutilizáveis
-│   ├── ui/               # Componentes base (Radix UI)
-│   ├── PageLayout.tsx    # Layout das páginas
-│   ├── SiteHeader.tsx    # Cabeçalho do site
-│   └── SiteFooter.tsx    # Rodapé do site
-├── hooks/                # Custom hooks
-├── lib/                  # Utilitários e configurações
-│   ├── form-schemas.ts   # Schemas de validação
-│   └── utils.ts          # Funções utilitárias
-└── styles.css            # Estilos adicionais
+│   ├── api/               # Route Handlers (POST)
+│   │   ├── contato/
+│   │   ├── cursinho/
+│   │   ├── doacoes/
+│   │   └── voluntario/
+│   ├── contato/           # Página + formulário
+│   ├── cursinho/          # Página + formulário
+│   ├── doacoes/           # Página + formulário
+│   ├── voluntario/        # Página + formulário
+│   ├── cidades/
+│   ├── projetos/
+│   ├── quem-somos/
+│   └── page.tsx           # Home
+├── components/
+│   ├── ui/                # shadcn/ui (gerado pelo CLI)
+│   ├── PageLayout.tsx
+│   ├── SiteHeader.tsx
+│   └── SiteFooter.tsx
+└── lib/
+    ├── form-schemas.ts    # Schemas Zod centralizados
+    └── utils.ts
 ```
-
-## 🛠️ Como Executar
-
-### Pré-requisitos
-
-- **[Bun](https://bun.sh/)** (recomendado) ou Node.js 18+
-- **Git**
-
-### Instalação
-
-1. **Clone o repositório:**
-
-   ```bash
-   git clone https://github.com/vmadalosso/instituto-movimenta.git
-   cd instituto-movimenta
-   ```
-
-2. **Instale as dependências:**
-
-   ```bash
-   bun install
-   ```
-
-3. **Execute o projeto:**
-
-   ```bash
-   bun dev
-   ```
-
-4. **Acesse:** [http://localhost:3000](http://localhost:3000)
-
-### Scripts Disponíveis
-
-```bash
-bun dev          # Inicia servidor de desenvolvimento
-bun build        # Build para produção
-bun start        # Inicia servidor de produção
-bun lint         # Executa ESLint
-bun format       # Formata código com Prettier
-bun test         # Executa testes
-bun test:watch   # Executa testes em modo watch
-```
-
-## 🧪 Testes
-
-O projeto utiliza [Vitest](https://vitest.dev/) para testes. Os testes estão localizados em arquivos `*.test.ts` e `*.test.tsx`.
-
-```bash
-# Executar todos os testes
-bun test
-
-# Executar testes em modo watch
-bun test:watch
-
-# Executar testes com coverage
-bun test --coverage
-```
-
-## 📱 Funcionalidades
-
-### ✅ Implementadas
-
-- **🏠 Página Inicial** — Apresentação da ONG e chamada para ação
-- **👥 Quem Somos** — Nossa história, missão e valores
-- **🎯 Projetos** — Iniciativas sociais em andamento
-- **🏙️ Cidades** — Locais onde atuamos no RS
-- **📚 Cursinho** — Cursos preparatórios e capacitações
-- **💝 Doações** — Sistema de doações com formulário
-- **📞 Contato** — Formulário de contato e informações
-- **🤝 Voluntariado** — Cadastro de voluntários
-- **🎨 UI/UX Moderna** — Design responsivo e acessível
-- **📝 Formulários Validados** — Validação em tempo real
-- **🔍 SEO Otimizado** — Meta tags e Open Graph
-
-### 🚧 Em Desenvolvimento
-
-- **🔧 Backend APIs** — Implementação dos endpoints
-- **💾 Banco de Dados** — Integração com sistema de dados
-- **📧 Sistema de Email** — Notificações e comunicações
-- **👤 Área do Voluntário** — Dashboard e gerenciamento
-- **📊 Analytics** — Métricas e relatórios
-- **🌐 Internacionalização** — Suporte multi-idioma
-
-## 📄 Licença
-
-Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
-## 🙏 Agradecimentos
-
-- **Instituto Movimenta** — Pela missão inspiradora
-- **Comunidade Open Source** — Pelas ferramentas incríveis
-- **Contribuintes** — Pelo apoio e colaboração
 
 ---
 
-**Instituto Movimenta** — Construindo um futuro mais solidário, uma ação de cada vez.
+## Volunteer Context
 
-� [@inst.movimenta](https://www.instagram.com/inst.movimenta/)
+Este projeto é desenvolvido de forma voluntária para o **Instituto Movimenta**, ONG do Rio Grande do Sul. Faz parte também do meu portfólio profissional como desenvolvedor.
+
+**Desenvolvedor:** Vitor Madalosso  
+**Instagram da ONG:** [@inst.movimenta](https://www.instagram.com/inst.movimenta/)
 
 ---
 
-Feito com 💜 por [Vitor Madalosso](https://github.com/vmadalosso)
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+<p align="center">
+  Made with ♥ by <a href="https://github.com/vmadalosso">Vitor Madalosso</a>
+</p>
