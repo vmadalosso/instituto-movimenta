@@ -26,14 +26,12 @@ export default function ContatoForm() {
 
   const onSubmit = async (values: ContatoFormValues) => {
     setSubmitError(null);
-
     const response = await fetch("/api/contato", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
     const result = await response.json();
-
     if (!response.ok) {
       setSubmitError(
         result?.message ||
@@ -42,66 +40,66 @@ export default function ContatoForm() {
       );
       return;
     }
-
     setSent(true);
   };
 
-  return sent ? (
-    <div className="bg-card rounded-3xl border border-border p-10 text-center shadow-elevated flex flex-col items-center justify-center">
-      <div className="inline-flex p-4 rounded-full bg-accent text-accent-foreground mb-4">
-        <CheckCircle2 className="h-8 w-8" />
-      </div>
-      <h2 className="font-display text-3xl font-bold text-primary">Mensagem enviada!</h2>
-      <p className="mt-3 text-foreground/75">Vamos responder o quanto antes.</p>
-    </div>
-  ) : (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      noValidate
-      className="bg-card rounded-3xl border border-border p-8 lg:p-10 shadow-soft space-y-5"
-    >
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Input id="name" {...register("name")} placeholder="Nome" />
-          {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}
+  if (sent) {
+    return (
+      <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20">
+        <div className="bg-card rounded-3xl border border-border p-10 text-center shadow-elevated">
+          <div className="inline-flex p-4 rounded-full bg-accent text-accent-foreground mb-4">
+            <CheckCircle2 className="h-8 w-8" />
+          </div>
+          <h2 className="font-display text-3xl font-bold text-primary">Mensagem enviada!</h2>
+          <p className="mt-3 text-foreground/75">Vamos responder o quanto antes.</p>
         </div>
-        <div className="space-y-2">
-          <Input id="email" type="email" {...register("email")} placeholder="E-mail" />
-          {errors.email ? <p className="text-sm text-destructive">{errors.email.message}</p> : null}
+      </section>
+    );
+  }
+
+  return (
+    <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="bg-card rounded-3xl border border-border p-8 lg:p-10 shadow-elevated space-y-5">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2.5 rounded-xl bg-gradient-warm text-highlight-foreground">
+              <Send className="h-5 w-5" />
+            </div>
+            <h2 className="font-display text-2xl font-bold text-primary">Mande um recado</h2>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Input placeholder="Nome completo" {...register("name")} />
+              {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <Input type="email" placeholder="E-mail" {...register("email")} />
+              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Input placeholder="Assunto" {...register("subject")} />
+            {errors.subject && <p className="text-sm text-destructive">{errors.subject.message}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Textarea {...register("message")} rows={5} placeholder="Escreva sua mensagem..." />
+            {errors.message && <p className="text-sm text-destructive">{errors.message.message}</p>}
+          </div>
+
+          {submitError && <p className="text-sm text-destructive">{submitError}</p>}
+
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full inline-flex items-center justify-center gap-2"
+          >
+            <Send className="h-4 w-4" /> Enviar mensagem
+          </Button>
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <Input id="subject" {...register("subject")} placeholder="Assunto" />
-        {errors.subject ? (
-          <p className="text-sm text-destructive">{errors.subject.message}</p>
-        ) : null}
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2">
-          Mensagem
-        </label>
-        <Textarea
-          id="message"
-          {...register("message")}
-          rows={5}
-          placeholder="Escreva sua mensagem"
-        />
-        {errors.message ? (
-          <p className="text-sm text-destructive">{errors.message.message}</p>
-        ) : null}
-      </div>
-
-      {submitError ? <p className="text-sm text-destructive">{submitError}</p> : null}
-
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-gradient-warm text-highlight-foreground font-semibold shadow-soft hover:shadow-elevated transition-all"
-      >
-        <Send className="h-4 w-4" /> Enviar mensagem
-      </Button>
-    </form>
+      </form>
+    </section>
   );
 }

@@ -29,11 +29,30 @@ describe("form schemas", () => {
     const result = cursinhoSchema.safeParse({
       name: "João Silva",
       email: "joao@example.com",
-      phone: "51999999999",
+      whatsapp: "51999999999",
       city: "Porto Alegre",
+      state: "Rio Grande do Sul",
+      neighborhood: "Cidade Baixa",
+      school: "Escola Estadual São José",
+      shift: "Noite",
     });
 
     expect(result.success).toBe(true);
+  });
+
+  it("rejects cursinho schema when shift is missing", () => {
+    const result = cursinhoSchema.safeParse({
+      name: "João Silva",
+      email: "joao@example.com",
+      whatsapp: "51999999999",
+      city: "Porto Alegre",
+      state: "Rio Grande do Sul",
+      neighborhood: "Cidade Baixa",
+      school: "Escola Estadual São José",
+      shift: "",
+    });
+
+    expect(result.success).toBe(false);
   });
 
   it("validates doacoes schema with a positive amount", () => {
@@ -50,13 +69,32 @@ describe("form schemas", () => {
 
   it("validates voluntario schema with valid data", () => {
     const result = voluntarioSchema.safeParse({
-      name: "Ana",
+      name: "Ana Costa",
       email: "ana@example.com",
       phone: "51988888888",
+      city: "Porto Alegre",
+      state: "Rio Grande do Sul",
       interest: "Educação",
-      message: "Tenho experiência em oficinas educativas.",
+      isStudent: "sim",
+      schoolOrUniversity: "UFRGS",
+      howFound: "Instagram",
     });
 
     expect(result.success).toBe(true);
+  });
+
+  it("rejects voluntario schema when isStudent is invalid", () => {
+    const result = voluntarioSchema.safeParse({
+      name: "Ana Costa",
+      email: "ana@example.com",
+      phone: "51988888888",
+      city: "Porto Alegre",
+      state: "Rio Grande do Sul",
+      interest: "Educação",
+      isStudent: "talvez",
+      howFound: "Instagram",
+    });
+
+    expect(result.success).toBe(false);
   });
 });

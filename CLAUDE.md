@@ -5,31 +5,34 @@ solidariedade, educação (cursinho popular), esporte, cultura e meio ambiente.
 Lema: "A saída é coletiva."
 
 <!-- SPECKIT START -->
+
 Para planos de feature ativos, leia o arquivo `specs/[branch]/plan.md` da
 feature em desenvolvimento. A constituição do projeto está em
 `.specify/memory/constitution.md`.
+
 <!-- SPECKIT END -->
 
 ---
 
 ## Stack
 
-| Tecnologia | Versão | Papel |
-|---|---|---|
-| Next.js | ^15.5.10 | Framework — App Router **obrigatório** |
-| React | ^18.3.1 | UI runtime |
-| TypeScript | ^5.9.3 | Linguagem — strict mode ativo |
-| Tailwind CSS | ^4.2.4 | Estilo — utility-first via PostCSS |
-| shadcn/ui | new-york style | Biblioteca de componentes (sobre Radix UI) |
-| Zod | ^3.25.76 | Validação de dados (formulários e API routes) |
-| React Hook Form | ^7.75.0 | Estado e submissão de formulários |
-| @hookform/resolvers | ^5.2.2 | Bridge entre RHF e Zod |
-| Lucide React | ^0.575.0 | Ícones |
-| Vitest | ^4.1.5 | Testes unitários |
-| Bun | — | Gerenciador de pacotes e runtime de scripts |
-| Vercel | — | Deploy (vercel.json presente) |
+| Tecnologia          | Versão         | Papel                                         |
+| ------------------- | -------------- | --------------------------------------------- |
+| Next.js             | ^15.5.10       | Framework — App Router **obrigatório**        |
+| React               | ^18.3.1        | UI runtime                                    |
+| TypeScript          | ^5.9.3         | Linguagem — strict mode ativo                 |
+| Tailwind CSS        | ^4.2.4         | Estilo — utility-first via PostCSS            |
+| shadcn/ui           | new-york style | Biblioteca de componentes (sobre Radix UI)    |
+| Zod                 | ^3.25.76       | Validação de dados (formulários e API routes) |
+| React Hook Form     | ^7.75.0        | Estado e submissão de formulários             |
+| @hookform/resolvers | ^5.2.2         | Bridge entre RHF e Zod                        |
+| Lucide React        | ^0.575.0       | Ícones                                        |
+| Vitest              | ^4.1.5         | Testes unitários                              |
+| Bun                 | —              | Gerenciador de pacotes e runtime de scripts   |
+| Vercel              | —              | Deploy (vercel.json presente)                 |
 
 **Fontes** (carregadas via Google Fonts em `globals.css`):
+
 - `Bricolage Grotesque` — display/headings (`font-display`)
 - `Inter` — corpo (`font-body`)
 
@@ -75,7 +78,7 @@ src/
 │   ├── doacoes/
 │   │   ├── DoacoesForm.tsx
 │   │   └── page.tsx
-│   ├── projetos/page.tsx         # Lista dos 5 eixos de atuação
+│   ├── projetos/page.tsx         # Lista dos 5 frentes de atuação
 │   ├── quem-somos/page.tsx       # Missão, visão, valores
 │   ├── voluntario/
 │   │   ├── VoluntarioForm.tsx
@@ -115,18 +118,18 @@ src/
 
 Arquivos de configuração na raiz:
 
-| Arquivo | Finalidade |
-|---|---|
-| `next.config.mjs` | `reactStrictMode: true` — sem mais configurações |
-| `postcss.config.cjs` | Plugin `@tailwindcss/postcss` |
-| `tsconfig.json` | Target ES2022, moduleResolution Bundler, paths `@/*` |
-| `components.json` | Config do shadcn/ui (style: new-york, rsc: false) |
-| `vitest.config.ts` | Ambiente node, globals, inclui `src/**/*.test.{ts,tsx}` |
-| `eslint.config.js` | Flat config com typescript-eslint + prettier |
-| `.prettierrc` | Prettier config |
-| `vercel.json` | Deploy target |
-| `bunfig.toml` | Config do Bun |
-| `wrangler.jsonc` | **Arquivo residual — não usar.** Referencia TanStack Start incorretamente. |
+| Arquivo              | Finalidade                                                                 |
+| -------------------- | -------------------------------------------------------------------------- |
+| `next.config.mjs`    | `reactStrictMode: true` — sem mais configurações                           |
+| `postcss.config.cjs` | Plugin `@tailwindcss/postcss`                                              |
+| `tsconfig.json`      | Target ES2022, moduleResolution Bundler, paths `@/*`                       |
+| `components.json`    | Config do shadcn/ui (style: new-york, rsc: false)                          |
+| `vitest.config.ts`   | Ambiente node, globals, inclui `src/**/*.test.{ts,tsx}`                    |
+| `eslint.config.js`   | Flat config com typescript-eslint + prettier                               |
+| `.prettierrc`        | Prettier config                                                            |
+| `vercel.json`        | Deploy target                                                              |
+| `bunfig.toml`        | Config do Bun                                                              |
+| `wrangler.jsonc`     | **Arquivo residual — não usar.** Referencia TanStack Start incorretamente. |
 
 ---
 
@@ -141,7 +144,11 @@ Usados em **todas** as páginas internas:
 <PageLayout>
   <PageHero
     eyebrow="Rótulo pequeno"
-    title={<>Título com <span className="text-accent">destaque</span>.</>}
+    title={
+      <>
+        Título com <span className="text-accent">destaque</span>.
+      </>
+    }
     subtitle="Subtítulo descritivo."
   />
   {/* conteúdo da página */}
@@ -169,7 +176,7 @@ Usados em **todas** as páginas internas:
 Padrão uniforme em todos os `*Form.tsx`:
 
 ```tsx
-"use client"
+"use client";
 // 1. schema importado de @/lib/form-schemas
 // 2. useForm<T> com resolver: zodResolver(schema)
 // 3. onSubmit → fetch para /api/[rota]
@@ -199,11 +206,11 @@ Todas seguem o mesmo contrato:
 
 ## Schemas Zod (`src/lib/form-schemas.ts`)
 
-| Schema | Campos |
-|---|---|
-| `contatoSchema` | name, email, subject, message |
-| `cursinhoSchema` | name, email, phone, city |
-| `doacoesSchema` | amount (number, min 1) |
+| Schema             | Campos                                           |
+| ------------------ | ------------------------------------------------ |
+| `contatoSchema`    | name, email, subject, message                    |
+| `cursinhoSchema`   | name, email, phone, city                         |
+| `doacoesSchema`    | amount (number, min 1)                           |
 | `voluntarioSchema` | name, email, phone, interest, message (optional) |
 
 Tipos inferidos exportados: `ContatoFormValues`, `CursinhoFormValues`,
@@ -217,23 +224,26 @@ Tipos inferidos exportados: `ContatoFormValues`, `CursinhoFormValues`,
 
 O tema usa cores OKLCH. Tokens principais:
 
-| Token | Descrição |
-|---|---|
-| `--primary` | Verde floresta escuro |
-| `--accent` | Amarelo sol |
-| `--highlight` | Laranja argila |
-| `--sky` | Azul céu |
+| Token         | Descrição                   |
+| ------------- | --------------------------- |
+| `--primary`   | Verde floresta escuro       |
+| `--accent`    | Amarelo sol                 |
+| `--highlight` | Laranja argila              |
+| `--sky`       | Azul céu                    |
 | `--secondary` | Bege claro (fundo de cards) |
 
 **Gradientes customizados** (usados como classes Tailwind via `@layer utilities`):
+
 - `bg-gradient-hero` — verde escuro diagonal
 - `bg-gradient-warm` — amarelo → laranja
 - `bg-gradient-soft` — fundo suave para seções
 
 **Sombras customizadas**:
+
 - `shadow-soft`, `shadow-elevated`, `shadow-glow`
 
 **Animações customizadas**:
+
 - `animate-float-slow` (8s loop, usado no hero)
 - `animate-fade-up` (0.8s, usado no hero e menu mobile)
 
@@ -251,18 +261,18 @@ O tema usa cores OKLCH. Tokens principais:
 
 ## Convenções de Nomenclatura
 
-| Contexto | Padrão | Exemplo |
-|---|---|---|
-| Componentes React | PascalCase | `SiteHeader`, `PageLayout` |
-| Form components | `[Rota]Form.tsx` co-localizado | `VoluntarioForm.tsx` |
-| Rotas (pastas) | kebab-case | `/quem-somos`, `/voluntario` |
-| API routes | `route.ts` em `app/api/[nome]/` | `app/api/contato/route.ts` |
-| Testes | `*.test.ts` co-localizado | `route.test.ts` |
-| Constantes de dados | SCREAMING_SNAKE_CASE | `NAV`, `METRICS`, `PROJECTS` |
-| Hooks | `use-kebab-case.tsx` | `use-mobile.tsx` |
-| Assets | `kebab-case.ext` | `project-education.jpg` |
-| Imports internos | alias `@/*` | `import { cn } from "@/lib/utils"` |
-| Tipos de form | sufixo `FormValues` | `VoluntarioFormValues` |
+| Contexto            | Padrão                          | Exemplo                            |
+| ------------------- | ------------------------------- | ---------------------------------- |
+| Componentes React   | PascalCase                      | `SiteHeader`, `PageLayout`         |
+| Form components     | `[Rota]Form.tsx` co-localizado  | `VoluntarioForm.tsx`               |
+| Rotas (pastas)      | kebab-case                      | `/quem-somos`, `/voluntario`       |
+| API routes          | `route.ts` em `app/api/[nome]/` | `app/api/contato/route.ts`         |
+| Testes              | `*.test.ts` co-localizado       | `route.test.ts`                    |
+| Constantes de dados | SCREAMING_SNAKE_CASE            | `NAV`, `METRICS`, `PROJECTS`       |
+| Hooks               | `use-kebab-case.tsx`            | `use-mobile.tsx`                   |
+| Assets              | `kebab-case.ext`                | `project-education.jpg`            |
+| Imports internos    | alias `@/*`                     | `import { cn } from "@/lib/utils"` |
+| Tipos de form       | sufixo `FormValues`             | `VoluntarioFormValues`             |
 
 ---
 

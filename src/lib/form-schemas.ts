@@ -10,8 +10,21 @@ export const contatoSchema = z.object({
 export const cursinhoSchema = z.object({
   name: z.string().min(2, "Digite seu nome completo"),
   email: z.string().email("E-mail inválido"),
-  phone: z.string().min(8, "Telefone inválido"),
+  whatsapp: z
+    .string()
+    .min(1, "WhatsApp obrigatório")
+    .refine(
+      (val) => {
+        const digits = val.replace(/\D/g, "");
+        return digits.length === 10 || digits.length === 11;
+      },
+      { message: "Número inválido — inclua DDD (ex: (51) 99999-9999)" },
+    ),
   city: z.string().min(2, "Informe sua cidade"),
+  state: z.string().min(2, "Informe seu estado"),
+  neighborhood: z.string().min(2, "Informe seu bairro"),
+  school: z.string().min(2, "Informe sua escola"),
+  shift: z.string().min(1, "Selecione o turno"),
 });
 
 export const doacoesSchema = z.object({
@@ -21,9 +34,23 @@ export const doacoesSchema = z.object({
 export const voluntarioSchema = z.object({
   name: z.string().min(2, "Digite seu nome completo"),
   email: z.string().email("E-mail inválido"),
-  phone: z.string().min(8, "Telefone inválido"),
+  phone: z
+    .string()
+    .min(1, "WhatsApp obrigatório")
+    .refine(
+      (val) => {
+        const digits = val.replace(/\D/g, "");
+        return digits.length === 10 || digits.length === 11;
+      },
+      { message: "Número inválido — inclua DDD (ex: (51) 99999-9999)" },
+    ),
+  city: z.string().min(2, "Informe sua cidade"),
+  state: z.string().min(2, "Informe seu estado"),
+  instagram: z.string().optional(),
   interest: z.string().min(1, "Escolha uma área de interesse"),
-  message: z.string().optional(),
+  isStudent: z.enum(["sim", "nao"], { required_error: "Selecione uma opção" }),
+  schoolOrUniversity: z.string().optional(),
+  howFound: z.string().min(1, "Selecione como conheceu o Movimenta"),
 });
 
 export type ContatoFormValues = z.infer<typeof contatoSchema>;

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Trophy, Music, HandHeart, Leaf } from "lucide-react";
+import { ArrowRight, BookOpen, PartyPopper, Music, HandHeart, Leaf } from "lucide-react";
 import { PageLayout, PageHero } from "@/components/PageLayout";
 import edu from "@/assets/project-education.jpg";
 import sport from "@/assets/project-sport.jpg";
@@ -15,6 +15,12 @@ export const metadata = {
 
 const ITEMS = [
   {
+    icon: Leaf,
+    title: "Meio ambiente",
+    desc: "Plantio de árvores, mutirões de preservação, cuidado com nascentes e ações de educação ambiental nas cidades onde atuamos.",
+    img: environment,
+  },
+  {
     icon: BookOpen,
     title: "Educação",
     desc: "Cursinho pré-vestibular popular, reforço escolar e oficinas de formação política e cidadã.",
@@ -22,28 +28,22 @@ const ITEMS = [
     link: "/cursinho",
   },
   {
-    icon: Trophy,
-    title: "Esporte",
-    desc: "Escolinhas comunitárias, torneios e ações que usam o esporte como direito e ferramenta de inclusão.",
-    img: sport,
-  },
-  {
     icon: Music,
-    title: "Cultura e lazer",
+    title: "Cultura",
     desc: "Saraus, festivais, oficinas de arte e ocupação cultural dos espaços públicos do território.",
     img: culture,
+  },
+  {
+    icon: PartyPopper,
+    title: "Lazer",
+    desc: "Eventos de lazer e recreação comunitária — da Páscoa Solidária ao Dia das Crianças — que levam alegria, pertencimento e memória afetiva às famílias do território.",
+    img: sport,
   },
   {
     icon: HandHeart,
     title: "Solidariedade",
     desc: "Mutirões, distribuição de alimentos, apoio em emergências e campanhas com famílias em vulnerabilidade.",
     img: solidarity,
-  },
-  {
-    icon: Leaf,
-    title: "Meio ambiente",
-    desc: "Plantio de árvores, mutirões de preservação, cuidado com nascentes e ações de educação ambiental nas cidades onde atuamos.",
-    img: environment,
   },
 ];
 

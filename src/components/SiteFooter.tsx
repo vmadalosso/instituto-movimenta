@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Instagram, Facebook, Mail, MapPin, Heart } from "lucide-react";
+import { Instagram, Mail, MapPin, Heart } from "lucide-react";
 import { useState } from "react";
 import { Button, Input } from "@/components/ui";
 
@@ -97,13 +97,6 @@ export function SiteFooter() {
                 className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent hover:text-accent-foreground transition-colors"
               >
                 <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="p-2 rounded-full bg-primary-foreground/10 hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <Facebook className="h-5 w-5" />
               </a>
             </div>
           </div>

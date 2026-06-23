@@ -4,8 +4,9 @@ import {
   Heart,
   Users,
   Sparkles,
+  MapPin,
   BookOpen,
-  Trophy,
+  PartyPopper,
   Music,
   HandHeart,
   Leaf,
@@ -25,13 +26,19 @@ export const metadata = {
 };
 
 const METRICS = [
-  { value: "+500", label: "pessoas impactadas", icon: Users },
-  { value: "12", label: "cidades atendidas", icon: Sparkles },
-  { value: "8", label: "projetos ativos", icon: Heart },
-  { value: "+120", label: "voluntários", icon: HandHeart },
+  { value: "+1M", label: "pessoas impactadas", icon: Users },
+  { value: "+30", label: "cidades atendidas", icon: MapPin },
+  { value: "+100", label: "voluntários", icon: HandHeart },
 ];
 
 const PROJECTS = [
+  {
+    title: "Meio ambiente",
+    desc: "Plantio, preservação de árvores e cuidado com o território onde a gente vive.",
+    img: environment,
+    icon: Leaf,
+    accent: "bg-secondary text-primary",
+  },
   {
     title: "Educação",
     desc: "Cursinho popular e reforço escolar para quem não pode pagar.",
@@ -40,18 +47,18 @@ const PROJECTS = [
     accent: "bg-sky text-sky-foreground",
   },
   {
-    title: "Esporte",
-    desc: "Esporte como ferramenta de cidadania para crianças e jovens.",
-    img: sport,
-    icon: Trophy,
-    accent: "bg-highlight text-highlight-foreground",
-  },
-  {
     title: "Cultura",
-    desc: "Lazer, arte e cultura popular ocupando os espaços do povo.",
+    desc: "Arte e cultura popular ocupando os espaços do povo.",
     img: culture,
     icon: Music,
     accent: "bg-accent text-accent-foreground",
+  },
+  {
+    title: "Lazer",
+    desc: "Da Páscoa Solidária ao Dia das Crianças — eventos de recreação que levam alegria e pertencimento às famílias da comunidade.",
+    img: sport,
+    icon: PartyPopper,
+    accent: "bg-highlight text-highlight-foreground",
   },
   {
     title: "Solidariedade",
@@ -59,13 +66,6 @@ const PROJECTS = [
     img: solidarity,
     icon: HandHeart,
     accent: "bg-primary text-primary-foreground",
-  },
-  {
-    title: "Meio ambiente",
-    desc: "Plantio, preservação de árvores e cuidado com o território onde a gente vive.",
-    img: environment,
-    icon: Leaf,
-    accent: "bg-secondary text-primary",
   },
 ];
 
@@ -107,8 +107,8 @@ export default function HomePage() {
               construção de um mundo mais justo, democrático e plural.
             </p>
             <p className="mt-4 text-base lg:text-lg text-primary-foreground/80 max-w-2xl">
-              Viver com dignidade não pode ser privilégio de poucos. Por isso, atuamos em ações de
-              solidariedade, educação, esporte, cultura e lazer.
+              Viver com dignidade não pode ser privilégio de poucos. Por isso, atuamos em
+              solidariedade, educação, cultura, lazer e meio ambiente.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-3">
@@ -119,12 +119,13 @@ export default function HomePage() {
                 Seja voluntário
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link
+              {/* Botão de doação ocultado temporariamente — reativar quando conta PJ estiver disponível */}
+              {/* <Link
                 href="/doacoes"
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-accent/90 transition-colors"
               >
                 <Heart className="h-4 w-4 fill-current" /> Doe agora
-              </Link>
+              </Link> */}
               <Link
                 href="/projetos"
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-full border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 transition-colors font-semibold"
@@ -138,7 +139,7 @@ export default function HomePage() {
 
       <section className="relative -mt-12 lg:-mt-16 z-10 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl bg-card rounded-3xl shadow-elevated border border-border p-6 lg:p-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-4">
             {METRICS.map((m) => (
               <div key={m.label} className="flex flex-col items-center text-center">
                 <div className="p-3 rounded-2xl bg-secondary mb-3">
@@ -177,7 +178,7 @@ export default function HomePage() {
                 Nossos projetos
               </span>
               <h2 className="mt-5 font-display text-4xl lg:text-5xl font-bold text-primary leading-tight">
-                Quatro frentes, um <em className="not-italic text-highlight">só movimento</em>.
+                Cinco frentes, um <em className="not-italic text-highlight">só movimento</em>.
               </h2>
             </div>
             <Link
@@ -241,12 +242,13 @@ export default function HomePage() {
               >
                 Quero ser voluntário <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
+              {/* Botão de doação ocultado temporariamente — reativar quando conta PJ estiver disponível */}
+              {/* <Link
                 href="/doacoes"
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-primary-foreground text-primary font-semibold hover:bg-primary-foreground/90 transition-colors"
               >
                 <Heart className="h-4 w-4 fill-current" /> Quero doar
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

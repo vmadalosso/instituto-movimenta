@@ -85,9 +85,10 @@ export function SiteHeader() {
             >
               <Link href="/voluntario">Seja voluntário</Link>
             </Button>
-            <Button asChild className="rounded-full text-sm font-semibold px-5 py-2">
+            {/* Botão de doação ocultado temporariamente — reativar quando conta PJ estiver disponível */}
+            {/* <Button asChild className="rounded-full text-sm font-semibold px-5 py-2">
               <Link href="/doacoes">Doe agora</Link>
-            </Button>
+            </Button> */}
           </div>
 
           <button
@@ -113,21 +114,22 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
-              <div className="grid grid-cols-2 gap-2 pt-2 mt-2 border-t border-border">
+              <div className="pt-2 mt-2 border-t border-border">
                 <Link
                   href="/voluntario"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-3 rounded-xl text-sm font-semibold text-center text-primary border border-primary/30"
+                  className="block px-4 py-3 rounded-xl text-sm font-semibold text-center text-primary border border-primary/30"
                 >
-                  Voluntário
+                  Seja voluntário
                 </Link>
-                <Link
+                {/* Botão de doação ocultado temporariamente — reativar quando conta PJ estiver disponível */}
+                {/* <Link
                   href="/doacoes"
                   onClick={() => setOpen(false)}
                   className="px-4 py-3 rounded-xl text-sm font-semibold text-center bg-gradient-warm text-highlight-foreground"
                 >
                   Doar
-                </Link>
+                </Link> */}
               </div>
             </nav>
           </div>
