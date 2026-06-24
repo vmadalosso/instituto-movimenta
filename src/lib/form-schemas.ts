@@ -1,16 +1,21 @@
 import { z } from "zod";
 
+const consent = z.boolean().refine((v) => v === true, {
+  message: "Você precisa aceitar para continuar.",
+});
+
 export const contatoSchema = z.object({
   name: z.string().min(2, "Digite seu nome"),
   email: z.string().email("E-mail inválido"),
   subject: z.string().min(5, "Informe um assunto"),
   message: z.string().min(10, "Escreva sua mensagem"),
+  consent,
 });
 
 export const cursinhoSchema = z.object({
   name: z.string().min(2, "Digite seu nome completo"),
   email: z.string().email("E-mail inválido"),
-  whatsapp: z
+  phone: z
     .string()
     .min(1, "WhatsApp obrigatório")
     .refine(
@@ -25,6 +30,7 @@ export const cursinhoSchema = z.object({
   neighborhood: z.string().min(2, "Informe seu bairro"),
   school: z.string().min(2, "Informe sua escola"),
   shift: z.string().min(1, "Selecione o turno"),
+  consent,
 });
 
 export const doacoesSchema = z.object({
@@ -51,6 +57,7 @@ export const voluntarioSchema = z.object({
   isStudent: z.enum(["sim", "nao"], { required_error: "Selecione uma opção" }),
   schoolOrUniversity: z.string().optional(),
   howFound: z.string().min(1, "Selecione como conheceu o Movimenta"),
+  consent,
 });
 
 export type ContatoFormValues = z.infer<typeof contatoSchema>;

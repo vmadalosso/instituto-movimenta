@@ -8,9 +8,22 @@ describe("form schemas", () => {
       email: "maria@example.com",
       subject: "Parceria",
       message: "Gostaria de conversar sobre uma parceria comunitária.",
+      consent: true,
     });
 
     expect(result.success).toBe(true);
+  });
+
+  it("rejects contato schema when consent is false", () => {
+    const result = contatoSchema.safeParse({
+      name: "Maria",
+      email: "maria@example.com",
+      subject: "Parceria",
+      message: "Gostaria de conversar sobre uma parceria comunitária.",
+      consent: false,
+    });
+
+    expect(result.success).toBe(false);
   });
 
   it("rejects contato schema with invalid email", () => {
@@ -19,22 +32,24 @@ describe("form schemas", () => {
       email: "maria-at-example.com",
       subject: "Parceria",
       message: "Mensagem válida.",
+      consent: true,
     });
 
     expect(result.success).toBe(false);
-    expect(result.error.issues[0].path).toEqual(["email"]);
+    expect(result.success ? null : result.error.issues[0].path).toEqual(["email"]);
   });
 
   it("validates cursinho schema with valid data", () => {
     const result = cursinhoSchema.safeParse({
       name: "João Silva",
       email: "joao@example.com",
-      whatsapp: "51999999999",
+      phone: "51999999999",
       city: "Porto Alegre",
       state: "Rio Grande do Sul",
       neighborhood: "Cidade Baixa",
       school: "Escola Estadual São José",
       shift: "Noite",
+      consent: true,
     });
 
     expect(result.success).toBe(true);
@@ -44,12 +59,29 @@ describe("form schemas", () => {
     const result = cursinhoSchema.safeParse({
       name: "João Silva",
       email: "joao@example.com",
-      whatsapp: "51999999999",
+      phone: "51999999999",
       city: "Porto Alegre",
       state: "Rio Grande do Sul",
       neighborhood: "Cidade Baixa",
       school: "Escola Estadual São José",
       shift: "",
+      consent: true,
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects cursinho schema with invalid phone number", () => {
+    const result = cursinhoSchema.safeParse({
+      name: "João Silva",
+      email: "joao@example.com",
+      phone: "123",
+      city: "Porto Alegre",
+      state: "Rio Grande do Sul",
+      neighborhood: "Cidade Baixa",
+      school: "Escola Estadual São José",
+      shift: "Manhã",
+      consent: true,
     });
 
     expect(result.success).toBe(false);
@@ -78,6 +110,7 @@ describe("form schemas", () => {
       isStudent: "sim",
       schoolOrUniversity: "UFRGS",
       howFound: "Instagram",
+      consent: true,
     });
 
     expect(result.success).toBe(true);
@@ -93,6 +126,7 @@ describe("form schemas", () => {
       interest: "Educação",
       isStudent: "talvez",
       howFound: "Instagram",
+      consent: true,
     });
 
     expect(result.success).toBe(false);

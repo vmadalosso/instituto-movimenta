@@ -77,6 +77,7 @@ src/
 ```
 
 Regras estruturais:
+
 - `page.tsx` DEVE ser Server Component por padrão; adicionar `"use client"` apenas
   quando estritamente necessário.
 - Form components DEVEM ser co-localizados com sua `page.tsx`.
@@ -92,41 +93,52 @@ a evolução incremental do backend sem mover arquivos existentes.
 ### III. Formulários e Validação
 
 Todo formulário DEVE seguir o padrão:
+
 1. Schema Zod definido em `src/lib/form-schemas.ts`.
 2. Tipo inferido exportado do mesmo arquivo.
 3. `useForm<T>` com `resolver: zodResolver(schema)`.
-4. Submissão via `fetch` para a API route correspondente (padrão atual) ou via
-   Server Action quando o backend estiver integrado.
-5. Estados de sucesso e erro tratados no componente — sem bibliotecas de toast
-   adicionais enquanto `sonner` (já instalado) não for configurado.
+4. Submissão via **Server Action** em `src/lib/actions/[entidade].ts`.
+5. Campo honeypot (`name="website"`) oculto via CSS, lido via `useRef`, fora do RHF.
+6. Checkbox de consentimento LGPD (`consent`) registrado no RHF com `z.boolean().refine(v => v === true)`.
+7. Estados de sucesso e erro tratados no componente com `sent` e `submitError`.
 
-API routes que recebem dados de formulário DEVEM:
-- Validar o body com `schema.safeParse(body)` antes de qualquer operação.
-- Retornar `422` com `errors: parseResult.error.flatten()` em caso de falha.
-- Retornar `201` com `{ success: true, message: "..." }` em caso de sucesso.
+Server Actions DEVEM:
+
+- Verificar o honeypot primeiro — se preenchido, retornar `{ success: true }` silenciosamente.
+- Validar com `schema.omit({ consent: true }).safeParse(data)`.
+- Chamar exclusivamente funções de `src/lib/db/` — nunca Supabase direto.
+- Retornar `{ success: boolean; message: string }`.
 
 **Rationale**: Validação centralizada evita divergência entre client e server.
-O padrão `safeParse` + flatten é consistente com o que as API routes já implementam.
+Server Actions eliminam a camada HTTP para mutações simples e são protegidos por
+CSRF nativo do Next.js.
 
-### IV. Backend e Evolução Progressiva
+### IV. Backend e Camadas de Acesso a Dados
 
-O backend DEVE evoluir incrementalmente sem big rewrites. Princípios:
+O backend usa Supabase (PostgreSQL + Auth). A arquitetura em camadas é obrigatória:
 
-- **API routes como contratos estáveis**: A assinatura de request/response de cada
-  route DEVE ser mantida ao trocar a implementação interna (de console.log para
-  Supabase, por exemplo).
-- **Banco de dados previsto**: Supabase (PostgreSQL). Queries DEVEM ser isoladas em
-  funções em `src/lib/db/` quando o banco for integrado — nunca inline em API routes.
-- **Stubs explícitos**: Enquanto a integração real não existir, API routes DEVEM ter
-  um comentário `// TODO: integrar com [serviço]` no lugar do console.log.
-- **Server Actions**: Podem substituir API routes para mutações quando houver ganho
-  claro de DX — mas NUNCA misturar os dois padrões para a mesma operação.
-- **REST por padrão**: GraphQL ou RPC somente com necessidade explícita documentada.
-- **Variáveis de ambiente**: DEVEM ser validadas com Zod em `src/lib/env.ts` antes
-  de serem usadas. Nunca acessar `process.env` diretamente em componentes.
+```
+Client Component → Server Action → src/lib/db/ → Supabase
+```
 
-**Rationale**: Isolamento da lógica de acesso a dados garante que a troca de
-provedor (ex: Supabase → outro) afete apenas `src/lib/db/`, não as rotas ou UI.
+Princípios:
+
+- **Camada de banco isolada**: Queries Supabase DEVEM estar exclusivamente em
+  `src/lib/db/[entidade].ts`. Nunca chamar Supabase diretamente em Server Actions,
+  componentes ou layouts.
+- **Server Actions para mutações**: Formulários públicos e operações do admin usam
+  Server Actions em `src/lib/actions/`. Nunca misturar com API routes na mesma operação.
+- **API routes apenas quando necessário**: Apenas `src/app/api/doacoes/route.ts`
+  permanece como stub até o gateway de pagamento ser definido.
+- **Variáveis de ambiente**: Validadas com Zod em `src/lib/env.ts`. Nunca acessar
+  `process.env` diretamente em Server Components ou Server Actions.
+- **Auth do admin**: Supabase Auth com sessões de 7 dias. Middleware Next.js protege
+  `/admin/**`. Usuários criados manualmente no Supabase Dashboard.
+- **RLS**: anon pode apenas INSERT; authenticated tem acesso total. Queries do admin
+  usam a sessão autenticada via cookies — nunca a service role key no código.
+
+**Rationale**: Isolamento em `src/lib/db/` garante que mudança de provedor afete
+apenas essa camada. Server Actions eliminam camada HTTP desnecessária para mutações.
 
 ### V. Simplicidade e Manutenibilidade
 
@@ -150,17 +162,17 @@ e previsível reduz o custo de entrada de novos colaboradores.
 As seguintes práticas são PROIBIDAS e não podem ser introduzidas sem emenda
 desta constituição:
 
-| Proibido | Alternativa |
-|---|---|
-| Pages Router (`pages/`) | App Router (`app/`) |
-| Arquivos `.css` novos | Tailwind utilities + tokens em `globals.css` |
-| TanStack Start / Wrangler | Next.js App Router nativo |
-| GraphQL | REST via Route Handlers |
-| `useState` para form state | React Hook Form |
-| Validação ad-hoc (sem Zod) | `z.object({})` em `form-schemas.ts` |
-| `process.env` direto em componentes | `src/lib/env.ts` validado com Zod |
-| Biblioteca de ícones além de Lucide React | Lucide React |
-| `npm install` / `yarn add` | `bun add` |
+| Proibido                                  | Alternativa                                  |
+| ----------------------------------------- | -------------------------------------------- |
+| Pages Router (`pages/`)                   | App Router (`app/`)                          |
+| Arquivos `.css` novos                     | Tailwind utilities + tokens em `globals.css` |
+| TanStack Start / Wrangler                 | Next.js App Router nativo                    |
+| GraphQL                                   | REST via Route Handlers                      |
+| `useState` para form state                | React Hook Form                              |
+| Validação ad-hoc (sem Zod)                | `z.object({})` em `form-schemas.ts`          |
+| `process.env` direto em componentes       | `src/lib/env.ts` validado com Zod            |
+| Biblioteca de ícones além de Lucide React | Lucide React                                 |
+| `npm install` / `yarn add`                | `bun add`                                    |
 
 ## Fluxo de Desenvolvimento
 
@@ -182,6 +194,7 @@ Esta constituição é o documento normativo do projeto Instituto Movimenta. Ela
 SUPERSEDE qualquer prática informal, decisão verbal ou convenção implícita.
 
 **Processo de emenda**:
+
 1. Identificar o princípio afetado e a mudança desejada.
 2. Documentar a justificativa no PR que altera este arquivo.
 3. Atualizar `CONSTITUTION_VERSION` conforme semantic versioning:
@@ -200,4 +213,4 @@ instruções de contexto para o agente de desenvolvimento.
 
 ---
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-06-12
+**Version**: 1.1.0 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-06-24

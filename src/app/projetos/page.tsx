@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, PartyPopper, Music, HandHeart, Leaf } from "lucide-react";
 import { PageLayout, PageHero } from "@/components/PageLayout";
 import edu from "@/assets/project-education.jpg";
-import sport from "@/assets/project-sport.jpg";
+import sport from "@/assets/project-recreation.jpg";
 import culture from "@/assets/project-culture.jpg";
 import solidarity from "@/assets/project-solidarity.jpg";
 import environment from "@/assets/project-environment.jpg";
