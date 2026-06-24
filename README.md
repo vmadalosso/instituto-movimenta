@@ -38,10 +38,12 @@ Este repositório é o site institucional da organização. Serve como plataform
 - **Quem Somos** — história, missão, visão e valores
 - **Projetos** — as 5 frentes de atuação (solidariedade, educação, esporte, cultura, meio ambiente)
 - **Cidades** — municípios atendidos no RS
-- **Cursinho Popular** — inscrição com formulário validado
-- **Voluntariado** — cadastro de voluntários com formulário validado
-- **Doações** — formulário de doação (integração com gateway a definir)
-- **Contato** — formulário de contato
+- **Cursinho Popular** — inscrição com formulário validado e persistência no banco
+- **Voluntariado** — cadastro de voluntários com formulário validado e persistência no banco
+- **Newsletter** — inscrição via footer, integrada ao banco
+- **Doações** — formulário (integração com gateway a definir)
+- **Contato** — formulário de contato com persistência
+- **Painel admin** — `/admin` protegido por autenticação; tabelas com filtros, exportação CSV e gestão de mensagens
 - **Design responsivo** — mobile-first, acessível
 
 ---
@@ -49,28 +51,31 @@ Este repositório é o site institucional da organização. Serve como plataform
 ## Tech Stack
 
 ### Frontend
-| Ferramenta | Finalidade |
-|---|---|
-| Next.js 15 (App Router) | Framework full-stack |
-| TypeScript | Tipagem estática |
-| Tailwind CSS v4 | Estilização utility-first |
-| shadcn/ui (new-york) | Componentes acessíveis (sobre Radix UI) |
-| React Hook Form + Zod | Formulários e validação |
-| Lucide React | Ícones |
+
+| Ferramenta              | Finalidade                              |
+| ----------------------- | --------------------------------------- |
+| Next.js 15 (App Router) | Framework full-stack                    |
+| TypeScript              | Tipagem estática                        |
+| Tailwind CSS v4         | Estilização utility-first               |
+| shadcn/ui (new-york)    | Componentes acessíveis (sobre Radix UI) |
+| React Hook Form + Zod   | Formulários e validação                 |
+| Lucide React            | Ícones                                  |
 
 ### Backend
-| Ferramenta | Finalidade |
-|---|---|
-| Next.js Route Handlers | API endpoints (serverless) |
-| Supabase | Banco de dados PostgreSQL gerenciado |
-| Zod | Validação server-side |
+
+| Ferramenta           | Finalidade                              |
+| -------------------- | --------------------------------------- |
+| Next.js Server Actions | Mutações (formulários públicos e admin) |
+| Supabase             | Banco de dados PostgreSQL + Auth        |
+| Zod                  | Validação server-side e env vars        |
 
 ### Infrastructure
-| Ferramenta | Finalidade |
-|---|---|
-| Vercel | Deploy e hosting |
-| Supabase | PostgreSQL + auth + storage |
-| Bun | Package manager e runtime |
+
+| Ferramenta | Finalidade                  |
+| ---------- | --------------------------- |
+| Vercel     | Deploy e hosting            |
+| Supabase   | PostgreSQL + auth + storage |
+| Bun        | Package manager e runtime   |
 
 ---
 
@@ -115,7 +120,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY="<anon-key>"
 SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
 ```
 
-> Para rodar apenas o frontend (sem persistência), as variáveis do Supabase podem ser omitidas — os formulários funcionam em modo stub.
+> As três variáveis são obrigatórias — o app valida sua presença na inicialização e não sobe sem elas.
 
 ### 4. Execute o projeto
 
@@ -147,17 +152,18 @@ O projeto é uma aplicação Next.js única, deployada na Vercel com Supabase co
 
 1. [supabase.com](https://supabase.com) → **New Project**
 2. Copie a **Project URL** e as chaves **anon** e **service_role**
+3. No **SQL Editor**, execute o conteúdo de `supabase/migrations/001_initial_schema.sql` para criar as tabelas e políticas RLS
 
 ### Passo 2 — Deploy na Vercel
 
 1. [vercel.com](https://vercel.com) → **New Project** → importe este repositório
 2. Configure as variáveis de ambiente:
 
-| Variável | Valor |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave anon pública |
-| `SUPABASE_SERVICE_ROLE_KEY` | Chave service role (apenas server-side) |
+| Variável                        | Valor                                   |
+| ------------------------------- | --------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | URL do projeto Supabase                 |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave anon pública                      |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Chave service role (apenas server-side) |
 
 3. Deploy
 
@@ -169,7 +175,7 @@ O projeto é uma aplicação Next.js única, deployada na Vercel com Supabase co
 bun run test
 ```
 
-Os testes ficam co-localizados com os arquivos testados (`*.test.ts`). Cobertura atual: schemas Zod e API routes.
+Os testes ficam co-localizados com os arquivos testados (`*.test.ts`). Cobertura atual: schemas Zod.
 
 ---
 
@@ -177,28 +183,37 @@ Os testes ficam co-localizados com os arquivos testados (`*.test.ts`). Cobertura
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── api/               # Route Handlers (POST)
-│   │   ├── contato/
-│   │   ├── cursinho/
-│   │   ├── doacoes/
-│   │   └── voluntario/
-│   ├── contato/           # Página + formulário
-│   ├── cursinho/          # Página + formulário
-│   ├── doacoes/           # Página + formulário
-│   ├── voluntario/        # Página + formulário
+├── app/                        # Next.js App Router
+│   ├── admin/                  # Painel administrativo (protegido)
+│   │   ├── (panel)/            # Layout com sidebar
+│   │   │   ├── page.tsx        # Dashboard
+│   │   │   ├── cursinho/
+│   │   │   ├── voluntarios/
+│   │   │   ├── contato/
+│   │   │   └── newsletter/
+│   │   └── login/
+│   ├── api/doacoes/            # Stub — gateway a definir
+│   ├── contato/                # Página + formulário
+│   ├── cursinho/               # Página + formulário
+│   ├── doacoes/                # Página + formulário
+│   ├── voluntario/             # Página + formulário
 │   ├── cidades/
 │   ├── projetos/
-│   ├── quem-somos/
-│   └── page.tsx           # Home
+│   └── quem-somos/
 ├── components/
-│   ├── ui/                # shadcn/ui (gerado pelo CLI)
+│   ├── admin/                  # AdminDataTable, AdminSidebar, DeleteConfirmModal
+│   ├── ui/                     # shadcn/ui (gerado pelo CLI)
 │   ├── PageLayout.tsx
 │   ├── SiteHeader.tsx
 │   └── SiteFooter.tsx
-└── lib/
-    ├── form-schemas.ts    # Schemas Zod centralizados
-    └── utils.ts
+├── lib/
+│   ├── actions/                # Server Actions ("use server")
+│   ├── db/                     # Acesso ao banco (Supabase)
+│   ├── env.ts                  # Validação Zod de variáveis de ambiente
+│   ├── form-schemas.ts         # Schemas Zod centralizados
+│   ├── supabase.ts             # Cliente Supabase (server)
+│   └── utils.ts
+└── middleware.ts               # Proteção de rotas /admin/**
 ```
 
 ---
