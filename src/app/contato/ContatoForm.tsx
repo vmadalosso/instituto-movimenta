@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CheckCircle2, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Textarea } from "@/components/ui";
 import { ContatoFormValues, contatoSchema } from "@/lib/form-schemas";
+import { submitContato } from "@/lib/actions/contato";
 
 export default function ContatoForm() {
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   const {
     register,
     handleSubmit,
@@ -21,23 +24,16 @@ export default function ContatoForm() {
       email: "",
       subject: "",
       message: "",
+      consent: false,
     },
   });
 
   const onSubmit = async (values: ContatoFormValues) => {
     setSubmitError(null);
-    const response = await fetch("/api/contato", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const result = await response.json();
-    if (!response.ok) {
-      setSubmitError(
-        result?.message ||
-          result?.errors?.formErrors?.[0] ||
-          "Erro ao enviar a mensagem. Tente novamente.",
-      );
+    const { consent: _, ...data } = values;
+    const result = await submitContato(data, honeypotRef.current?.value ?? "");
+    if (!result.success) {
+      setSubmitError(result.message);
       return;
     }
     setSent(true);
@@ -60,6 +56,17 @@ export default function ContatoForm() {
   return (
     <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20">
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        {/* honeypot — oculto via CSS, não registrado no RHF */}
+        <input
+          ref={honeypotRef}
+          name="website"
+          type="text"
+          tabIndex={-1}
+          aria-hidden="true"
+          autoComplete="off"
+          style={{ display: "none" }}
+        />
+
         <div className="bg-card rounded-3xl border border-border p-8 lg:p-10 shadow-elevated space-y-5">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2.5 rounded-xl bg-gradient-warm text-highlight-foreground">
@@ -87,6 +94,20 @@ export default function ContatoForm() {
           <div className="space-y-2">
             <Textarea {...register("message")} rows={5} placeholder="Escreva sua mensagem..." />
             {errors.message && <p className="text-sm text-destructive">{errors.message.message}</p>}
+          </div>
+
+          <div className="space-y-2 pt-1">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                {...register("consent")}
+                className="mt-0.5 h-4 w-4 accent-primary"
+              />
+              <span className="text-sm text-foreground/80">
+                Concordo que meus dados sejam usados pelo Instituto Movimenta para fins de contato.
+              </span>
+            </label>
+            {errors.consent && <p className="text-sm text-destructive">{errors.consent.message}</p>}
           </div>
 
           {submitError && <p className="text-sm text-destructive">{submitError}</p>}

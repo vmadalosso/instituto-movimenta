@@ -2,12 +2,30 @@
 
 import Link from "next/link";
 import { Instagram, Mail, MapPin, Heart } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Input } from "@/components/ui";
+import { submitNewsletter } from "@/lib/actions/newsletter";
 
 export function SiteFooter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.includes("@")) return;
+    setLoading(true);
+    setError(null);
+    const result = await submitNewsletter({ email }, honeypotRef.current?.value ?? "");
+    setLoading(false);
+    if (result.success) {
+      setDone(true);
+    } else {
+      setError(result.message);
+    }
+  };
 
   return (
     <footer className="bg-primary text-primary-foreground mt-24">
@@ -21,13 +39,17 @@ export function SiteFooter() {
               Histórias de transformação, mutirões e oportunidades de voluntariado direto no seu
               e-mail.
             </p>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (email.includes("@")) setDone(true);
-              }}
-              className="mt-6 flex flex-col sm:flex-row gap-2"
-            >
+            <form onSubmit={handleSubmit} className="mt-6 flex flex-col sm:flex-row gap-2">
+              {/* honeypot — oculto via CSS, não registrado no RHF */}
+              <input
+                ref={honeypotRef}
+                name="website"
+                type="text"
+                tabIndex={-1}
+                aria-hidden="true"
+                autoComplete="off"
+                style={{ display: "none" }}
+              />
               <Input
                 type="email"
                 required
@@ -35,14 +57,17 @@ export function SiteFooter() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 rounded-full"
+                disabled={done}
               />
               <Button
                 type="submit"
+                disabled={done || loading}
                 className="rounded-full border-1 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 transition-colors font-semibold"
               >
-                {done ? "Inscrito ✓" : "Inscrever"}
+                {done ? "Inscrito ✓" : loading ? "..." : "Inscrever"}
               </Button>
             </form>
+            {error && <p className="mt-2 text-sm text-accent">{error}</p>}
           </div>
 
           <div>

@@ -1,18 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CheckCircle2, GraduationCap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@/components/ui";
 import { CursinhoFormValues, cursinhoSchema } from "@/lib/form-schemas";
 import { maskBrPhone } from "@/lib/utils";
+import { submitCursinho } from "@/lib/actions/cursinho";
 
 const SHIFTS = ["Manhã", "Tarde", "Noite"];
 
 export default function CursinhoForm() {
   const [sent, setSent] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   const {
     register,
     handleSubmit,
@@ -23,12 +26,13 @@ export default function CursinhoForm() {
     defaultValues: {
       name: "",
       email: "",
-      whatsapp: "",
+      phone: "",
       city: "",
       state: "",
       neighborhood: "",
       school: "",
       shift: "",
+      consent: false,
     },
   });
 
@@ -36,18 +40,10 @@ export default function CursinhoForm() {
 
   const onSubmit = async (values: CursinhoFormValues) => {
     setSubmitError(null);
-    const response = await fetch("/api/cursinho", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const result = await response.json();
-    if (!response.ok) {
-      setSubmitError(
-        result?.message ||
-          result?.errors?.formErrors?.[0] ||
-          "Erro ao enviar a inscrição. Tente novamente.",
-      );
+    const { consent: _, ...data } = values;
+    const result = await submitCursinho(data, honeypotRef.current?.value ?? "");
+    if (!result.success) {
+      setSubmitError(result.message);
       return;
     }
     setSent(true);
@@ -72,6 +68,17 @@ export default function CursinhoForm() {
   return (
     <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        {/* honeypot — oculto via CSS, não registrado no RHF */}
+        <input
+          ref={honeypotRef}
+          name="website"
+          type="text"
+          tabIndex={-1}
+          aria-hidden="true"
+          autoComplete="off"
+          style={{ display: "none" }}
+        />
+
         <div className="bg-card rounded-3xl border border-border p-8 lg:p-10 shadow-elevated space-y-5">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2.5 rounded-xl bg-gradient-warm text-highlight-foreground">
@@ -92,7 +99,7 @@ export default function CursinhoForm() {
 
           <div className="space-y-2">
             {(() => {
-              const { onChange, ...field } = register("whatsapp");
+              const { onChange, ...field } = register("phone");
               return (
                 <Input
                   {...field}
@@ -105,9 +112,7 @@ export default function CursinhoForm() {
                 />
               );
             })()}
-            {errors.whatsapp && (
-              <p className="text-sm text-destructive">{errors.whatsapp.message}</p>
-            )}
+            {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
@@ -151,6 +156,21 @@ export default function CursinhoForm() {
               ))}
             </div>
             {errors.shift && <p className="text-sm text-destructive">{errors.shift.message}</p>}
+          </div>
+
+          <div className="space-y-2 pt-1">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                {...register("consent")}
+                className="mt-0.5 h-4 w-4 accent-primary"
+              />
+              <span className="text-sm text-foreground/80">
+                Concordo que meus dados sejam usados pelo Instituto Movimenta para fins de inscrição
+                no cursinho popular.
+              </span>
+            </label>
+            {errors.consent && <p className="text-sm text-destructive">{errors.consent.message}</p>}
           </div>
 
           {submitError && <p className="text-sm text-destructive">{submitError}</p>}
