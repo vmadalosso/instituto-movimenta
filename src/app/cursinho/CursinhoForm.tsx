@@ -97,7 +97,7 @@ export default function CursinhoForm() {
                 <Input
                   {...field}
                   type="tel"
-                  placeholder="WhatsApp/Telefone — (51) 99999-9999"
+                  placeholder="Telefone/WhatsApp — (51) 99999-9999"
                   onChange={(e) => {
                     e.target.value = maskBrPhone(e.target.value);
                     onChange(e);
