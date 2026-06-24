@@ -6,9 +6,8 @@ Lema: "A saída é coletiva."
 
 <!-- SPECKIT START -->
 
-Para planos de feature ativos, leia o arquivo `specs/[branch]/plan.md` da
-feature em desenvolvimento. A constituição do projeto está em
-`.specify/memory/constitution.md`.
+Nenhuma feature em andamento. Para iniciar uma nova feature, rodar `/speckit-git-feature`.
+A constituição do projeto está em `.specify/memory/constitution.md`.
 
 <!-- SPECKIT END -->
 
@@ -16,20 +15,21 @@ feature em desenvolvimento. A constituição do projeto está em
 
 ## Stack
 
-| Tecnologia          | Versão         | Papel                                         |
-| ------------------- | -------------- | --------------------------------------------- |
-| Next.js             | ^15.5.10       | Framework — App Router **obrigatório**        |
-| React               | ^18.3.1        | UI runtime                                    |
-| TypeScript          | ^5.9.3         | Linguagem — strict mode ativo                 |
-| Tailwind CSS        | ^4.2.4         | Estilo — utility-first via PostCSS            |
-| shadcn/ui           | new-york style | Biblioteca de componentes (sobre Radix UI)    |
-| Zod                 | ^3.25.76       | Validação de dados (formulários e API routes) |
-| React Hook Form     | ^7.75.0        | Estado e submissão de formulários             |
-| @hookform/resolvers | ^5.2.2         | Bridge entre RHF e Zod                        |
-| Lucide React        | ^0.575.0       | Ícones                                        |
-| Vitest              | ^4.1.5         | Testes unitários                              |
-| Bun                 | —              | Gerenciador de pacotes e runtime de scripts   |
-| Vercel              | —              | Deploy (vercel.json presente)                 |
+| Tecnologia          | Versão         | Papel                                              |
+| ------------------- | -------------- | -------------------------------------------------- |
+| Next.js             | ^15.5.10       | Framework — App Router **obrigatório**             |
+| React               | ^18.3.1        | UI runtime                                         |
+| TypeScript          | ^5.9.3         | Linguagem — strict mode ativo                      |
+| Tailwind CSS        | ^4.2.4         | Estilo — utility-first via PostCSS                 |
+| shadcn/ui           | new-york style | Biblioteca de componentes (sobre Radix UI)         |
+| Supabase            | —              | Backend: PostgreSQL + Auth (via `@supabase/ssr`)   |
+| Zod                 | ^3.25.76       | Validação de dados (formulários, env, Server Actions) |
+| React Hook Form     | ^7.75.0        | Estado e submissão de formulários                  |
+| @hookform/resolvers | ^5.2.2         | Bridge entre RHF e Zod                             |
+| Lucide React        | ^0.575.0       | Ícones                                             |
+| Vitest              | ^4.1.5         | Testes unitários                                   |
+| Bun                 | —              | Gerenciador de pacotes e runtime de scripts        |
+| Vercel              | —              | Deploy — produção em institutomovimenta.org        |
 
 **Fontes** (carregadas via Google Fonts em `globals.css`):
 
@@ -63,31 +63,39 @@ bunx tsc --noEmit
 ```
 src/
 ├── app/                          # Next.js App Router
-│   ├── api/                      # Route Handlers (POST apenas, stubs)
-│   │   ├── contato/route.ts
-│   │   ├── cursinho/route.ts
-│   │   ├── doacoes/route.ts
-│   │   └── voluntario/route.ts
-│   ├── cidades/page.tsx          # Página de cidades atendidas
+│   ├── admin/                    # Painel administrativo (protegido por middleware)
+│   │   ├── (panel)/              # Route group — layout com sidebar
+│   │   │   ├── layout.tsx        # Layout do painel (sidebar + contagem de não lidas)
+│   │   │   ├── page.tsx          # Dashboard (/admin)
+│   │   │   ├── cursinho/page.tsx # Tabela de inscrições
+│   │   │   ├── voluntarios/page.tsx
+│   │   │   ├── contato/page.tsx  # Mensagens com toggle "lida"
+│   │   │   └── newsletter/page.tsx
+│   │   └── login/
+│   │       ├── page.tsx
+│   │       └── AdminLoginForm.tsx # Client Component de login
+│   ├── api/                      # Route Handlers — apenas doacoes (stub)
+│   │   └── doacoes/route.ts      # Stub — gateway de pagamento não integrado
 │   ├── contato/
-│   │   ├── ContatoForm.tsx       # Client Component — co-localizado
+│   │   ├── ContatoForm.tsx       # Client Component — Server Action
 │   │   └── page.tsx
 │   ├── cursinho/
 │   │   ├── CursinhoForm.tsx
 │   │   └── page.tsx
 │   ├── doacoes/
-│   │   ├── DoacoesForm.tsx
+│   │   ├── DoacoesForm.tsx       # Sem integração — em breve
 │   │   └── page.tsx
-│   ├── projetos/page.tsx         # Lista dos 5 frentes de atuação
-│   ├── quem-somos/page.tsx       # Missão, visão, valores
+│   ├── cidades/page.tsx
+│   ├── projetos/page.tsx
+│   ├── quem-somos/page.tsx
 │   ├── voluntario/
 │   │   ├── VoluntarioForm.tsx
 │   │   └── page.tsx
-│   ├── error.tsx                 # Error boundary do App Router
+│   ├── error.tsx
 │   ├── globals.css               # Tokens de design + Tailwind v4 entry
-│   ├── layout.tsx                # Root layout com metadata global
-│   ├── not-found.tsx             # Página 404
-│   └── page.tsx                  # Home
+│   ├── layout.tsx
+│   ├── not-found.tsx
+│   └── page.tsx
 │
 ├── assets/                       # Imagens estáticas (importadas como módulos)
 │   ├── hero-community.jpg
@@ -95,41 +103,57 @@ src/
 │   ├── project-culture.jpg
 │   ├── project-education.jpg
 │   ├── project-environment.jpg
-│   ├── project-solidarity.jpg
-│   └── project-sport.jpg
+│   ├── project-recreation.jpg
+│   └── project-solidarity.jpg
 │
 ├── components/
+│   ├── admin/                    # Componentes exclusivos do painel admin
+│   │   ├── AdminDataTable.tsx    # Tabela genérica com filtros, CSV export, delete
+│   │   ├── AdminSidebar.tsx      # Sidebar responsiva com badge de não lidas
+│   │   └── DeleteConfirmModal.tsx
 │   ├── ui/                       # shadcn/ui — gerado pelo CLI, não editar à mão
-│   │   └── index.ts              # Barrel export de todos os componentes ui/
-│   ├── PageLayout.tsx            # <PageLayout> + <PageHero> reutilizáveis
-│   ├── SiteFooter.tsx            # Footer global (newsletter mockup + links)
-│   └── SiteHeader.tsx            # Header sticky com scroll blur e mobile menu
+│   ├── PageLayout.tsx
+│   ├── SiteFooter.tsx            # Newsletter integrada ao Supabase
+│   └── SiteHeader.tsx
 │
 ├── hooks/
-│   └── use-mobile.tsx            # useIsMobile() — breakpoint 768px
+│   └── use-mobile.tsx
 │
 ├── lib/
-│   ├── form-schemas.ts           # Todos os schemas Zod + tipos inferidos
-│   └── utils.ts                  # cn() — única função utilitária
+│   ├── actions/                  # Server Actions ("use server")
+│   │   ├── admin.ts              # deleteRecord, toggleLida (admin panel)
+│   │   ├── contato.ts
+│   │   ├── cursinho.ts
+│   │   ├── newsletter.ts
+│   │   └── voluntarios.ts
+│   ├── db/                       # Acesso ao banco — NUNCA inline em actions/componentes
+│   │   ├── contato.ts
+│   │   ├── cursinho.ts
+│   │   ├── newsletter.ts
+│   │   └── voluntarios.ts
+│   ├── env.ts                    # Validação Zod de variáveis de ambiente
+│   ├── form-schemas.ts           # Schemas Zod + tipos inferidos
+│   ├── supabase.ts               # createServerSupabaseClient() com cookie helpers
+│   └── utils.ts                  # cn(), maskBrPhone()
 │
+├── middleware.ts                 # Proteção de rotas /admin/** via Supabase Auth
 ├── styles.css                    # Referenciado pelo shadcn (components.json)
-└── global.d.ts                   # declare module "*.css"
+└── global.d.ts
 ```
 
 Arquivos de configuração na raiz:
 
-| Arquivo              | Finalidade                                                                 |
-| -------------------- | -------------------------------------------------------------------------- |
-| `next.config.mjs`    | `reactStrictMode: true` — sem mais configurações                           |
-| `postcss.config.cjs` | Plugin `@tailwindcss/postcss`                                              |
-| `tsconfig.json`      | Target ES2022, moduleResolution Bundler, paths `@/*`                       |
-| `components.json`    | Config do shadcn/ui (style: new-york, rsc: false)                          |
-| `vitest.config.ts`   | Ambiente node, globals, inclui `src/**/*.test.{ts,tsx}`                    |
-| `eslint.config.js`   | Flat config com typescript-eslint + prettier                               |
-| `.prettierrc`        | Prettier config                                                            |
-| `vercel.json`        | Deploy target                                                              |
-| `bunfig.toml`        | Config do Bun                                                              |
-| `wrangler.jsonc`     | **Arquivo residual — não usar.** Referencia TanStack Start incorretamente. |
+| Arquivo              | Finalidade                                          |
+| -------------------- | --------------------------------------------------- |
+| `next.config.mjs`    | `reactStrictMode: true`                             |
+| `postcss.config.cjs` | Plugin `@tailwindcss/postcss`                       |
+| `tsconfig.json`      | Target ES2022, moduleResolution Bundler, paths `@/*`|
+| `components.json`    | Config do shadcn/ui (style: new-york, rsc: false)   |
+| `vitest.config.ts`   | Ambiente node, globals                              |
+| `eslint.config.js`   | Flat config com typescript-eslint + prettier        |
+| `.prettierrc`        | Prettier config                                     |
+| `vercel.json`        | Deploy target                                       |
+| `bunfig.toml`        | Config do Bun                                       |
 
 ---
 
@@ -137,92 +161,76 @@ Arquivos de configuração na raiz:
 
 ### PageLayout e PageHero (`src/components/PageLayout.tsx`)
 
-Usados em **todas** as páginas internas:
+Usados em **todas** as páginas públicas internas:
 
 ```tsx
-// Página com hero padrão
 <PageLayout>
   <PageHero
     eyebrow="Rótulo pequeno"
-    title={
-      <>
-        Título com <span className="text-accent">destaque</span>.
-      </>
-    }
+    title={<>Título com <span className="text-accent">destaque</span>.</>}
     subtitle="Subtítulo descritivo."
   />
   {/* conteúdo da página */}
 </PageLayout>
 ```
 
-`PageLayout` renderiza `SiteHeader` + `<main>` + `SiteFooter`.
-
-### SiteHeader (`src/components/SiteHeader.tsx`)
-
-- `"use client"` — usa `usePathname` e `useState`
-- Sticky com efeito blur ao scrollar (`window.scrollY > 12`)
-- Menu mobile animado com `animate-fade-up`
-- Nav ativa comparando `pathname === to`
-- Links de navegação definidos na constante `NAV`
-
-### SiteFooter (`src/components/SiteFooter.tsx`)
-
-- `"use client"` — formulário de newsletter com estado local (mockup)
-- Instagram real: `https://www.instagram.com/inst.movimenta/`
-- Facebook: link placeholder (`#`)
-
-### Formulários
-
-Padrão uniforme em todos os `*Form.tsx`:
+### Formulários — Padrão com Server Actions
 
 ```tsx
 "use client";
 // 1. schema importado de @/lib/form-schemas
 // 2. useForm<T> com resolver: zodResolver(schema)
-// 3. onSubmit → fetch para /api/[rota]
-// 4. estado local: sent (boolean) + submitError (string | null)
-// 5. sucesso → tela de confirmação no lugar do formulário
-// 6. erro de API → <p className="text-sm text-destructive">
+// 3. useRef para campo honeypot (fora do controle do RHF)
+// 4. onSubmit → const { consent: _, ...data } = values
+//              → await submitAction(data, honeypotRef.current?.value ?? "")
+// 5. estado local: sent (boolean) + submitError (string | null)
+// 6. sucesso → tela de confirmação
+// 7. checkbox de consentimento LGPD registrado no RHF
 ```
 
-Componentes de UI do shadcn usados nos forms: `Button`, `Input`, `Textarea`.
-Importados via barrel: `import { Button, Input } from "@/components/ui"`.
+Todos os formulários públicos têm:
+- **Honeypot**: `<input name="website" style={{ display: "none" }} ref={honeypotRef} />`
+- **Consentimento LGPD**: checkbox `consent` validado com `z.boolean().refine(v => v === true)`
+- **Duplicatas**: erro amigável quando Postgres retorna código `23505`
 
-### API Routes
+### Server Actions (`src/lib/actions/`)
 
-Todas seguem o mesmo contrato:
+Todas marcadas com `"use server"`. Padrão:
+1. Verificar honeypot → se preenchido, retornar `{ success: true }` silenciosamente
+2. Validar com `schema.omit({ consent: true }).safeParse(data)`
+3. Chamar função do `src/lib/db/`
+4. Retornar `{ success: boolean; message: string }`
 
-```ts
-// Sucesso
-{ success: true, message: "..." }  // status 201
+### Camada de banco (`src/lib/db/`)
 
-// Erro de validação
-{ success: false, errors: parseResult.error.flatten() }  // status 422
-```
+Cada arquivo exporta funções puras de acesso ao banco. **Nunca** chamar Supabase direto
+em Server Actions ou componentes — sempre via `src/lib/db/`.
 
-**Todas são stubs** — validam com Zod e fazem `console.log`. Não há banco de dados.
+### Painel Admin
+
+- Rota protegida por `src/middleware.ts` — redireciona para `/admin/login` se não autenticado
+- Layout com sidebar responsiva (desktop fixa, mobile drawer)
+- `AdminDataTable` é client component genérico: filtros via URL params, CSV export nativo, delete com modal
+- Contagem de mensagens não lidas: calculada no layout (Server Component) e passada como prop
 
 ---
 
 ## Schemas Zod (`src/lib/form-schemas.ts`)
 
-| Schema             | Campos                                           |
-| ------------------ | ------------------------------------------------ |
-| `contatoSchema`    | name, email, subject, message                    |
-| `cursinhoSchema`   | name, email, phone, city                         |
-| `doacoesSchema`    | amount (number, min 1)                           |
-| `voluntarioSchema` | name, email, phone, interest, message (optional) |
+| Schema             | Campos principais                                                          |
+| ------------------ | -------------------------------------------------------------------------- |
+| `contatoSchema`    | name, email, subject, message, consent                                     |
+| `cursinhoSchema`   | name, email, phone, city, state, neighborhood, school, shift, consent      |
+| `doacoesSchema`    | amount (number, min 1) — sem consent (sem persistência por ora)            |
+| `voluntarioSchema` | name, email, phone, city, state, instagram?, interest, isStudent, schoolOrUniversity?, howFound, consent |
 
-Tipos inferidos exportados: `ContatoFormValues`, `CursinhoFormValues`,
-`DoacoesFormValues`, `VoluntarioFormValues`.
+Todos os schemas com `consent` usam `z.boolean().refine(v => v === true)`.
 
 ---
 
 ## Design System
 
 ### Tokens de cor (definidos em `src/app/globals.css`)
-
-O tema usa cores OKLCH. Tokens principais:
 
 | Token         | Descrição                   |
 | ------------- | --------------------------- |
@@ -232,100 +240,98 @@ O tema usa cores OKLCH. Tokens principais:
 | `--sky`       | Azul céu                    |
 | `--secondary` | Bege claro (fundo de cards) |
 
-**Gradientes customizados** (usados como classes Tailwind via `@layer utilities`):
+**Gradientes customizados** (`@layer utilities`):
+- `bg-gradient-hero`, `bg-gradient-warm`, `bg-gradient-soft`
 
-- `bg-gradient-hero` — verde escuro diagonal
-- `bg-gradient-warm` — amarelo → laranja
-- `bg-gradient-soft` — fundo suave para seções
+**Sombras**: `shadow-soft`, `shadow-elevated`, `shadow-glow`
 
-**Sombras customizadas**:
-
-- `shadow-soft`, `shadow-elevated`, `shadow-glow`
-
-**Animações customizadas**:
-
-- `animate-float-slow` (8s loop, usado no hero)
-- `animate-fade-up` (0.8s, usado no hero e menu mobile)
+**Animações**: `animate-float-slow` (hero), `animate-fade-up` (hero + menu mobile)
 
 ### Tipografia
 
-- `font-display` → Bricolage Grotesque (todos os headings h1–h5 por padrão via `@layer base`)
+- `font-display` → Bricolage Grotesque (headings h1–h5 por padrão via `@layer base`)
 - `font-body` → Inter (body)
-- Headings: `letter-spacing: -0.02em` via `@layer base`
+- `letter-spacing: -0.02em` nos headings
 
 ### Radius
 
-`--radius: 1rem` (base). Cards usam `rounded-3xl`, botões pill usam `rounded-full`.
+`--radius: 1rem`. Cards usam `rounded-3xl`, botões pill usam `rounded-full`.
 
 ---
 
 ## Convenções de Nomenclatura
 
-| Contexto            | Padrão                          | Exemplo                            |
-| ------------------- | ------------------------------- | ---------------------------------- |
-| Componentes React   | PascalCase                      | `SiteHeader`, `PageLayout`         |
-| Form components     | `[Rota]Form.tsx` co-localizado  | `VoluntarioForm.tsx`               |
-| Rotas (pastas)      | kebab-case                      | `/quem-somos`, `/voluntario`       |
-| API routes          | `route.ts` em `app/api/[nome]/` | `app/api/contato/route.ts`         |
-| Testes              | `*.test.ts` co-localizado       | `route.test.ts`                    |
-| Constantes de dados | SCREAMING_SNAKE_CASE            | `NAV`, `METRICS`, `PROJECTS`       |
-| Hooks               | `use-kebab-case.tsx`            | `use-mobile.tsx`                   |
-| Assets              | `kebab-case.ext`                | `project-education.jpg`            |
-| Imports internos    | alias `@/*`                     | `import { cn } from "@/lib/utils"` |
-| Tipos de form       | sufixo `FormValues`             | `VoluntarioFormValues`             |
+| Contexto            | Padrão                         | Exemplo                             |
+| ------------------- | ------------------------------ | ----------------------------------- |
+| Componentes React   | PascalCase                     | `SiteHeader`, `AdminDataTable`      |
+| Form components     | `[Rota]Form.tsx` co-localizado | `VoluntarioForm.tsx`                |
+| Server Actions      | verbo + entidade               | `submitCursinho`, `deleteRecord`    |
+| Rotas (pastas)      | kebab-case                     | `/quem-somos`, `/voluntario`        |
+| Testes              | `*.test.ts` co-localizado      | `form-schemas.test.ts`              |
+| Constantes de dados | SCREAMING_SNAKE_CASE           | `NAV`, `METRICS`, `PROJECTS`        |
+| Hooks               | `use-kebab-case.tsx`           | `use-mobile.tsx`                    |
+| Assets              | `kebab-case.ext`               | `project-education.jpg`             |
+| Imports internos    | alias `@/*`                    | `import { cn } from "@/lib/utils"`  |
+| Tipos de form       | sufixo `FormValues`            | `VoluntarioFormValues`              |
 
 ---
 
 ## Testes
 
 - Runner: **Vitest** com `vite-tsconfig-paths`
-- Ambiente: `node` (sem jsdom — sem testes de componente React hoje)
-- Localização: `src/**/*.test.{ts,tsx}` co-localizados com o arquivo testado
-- Cobertura atual: schemas Zod (`form-schemas.test.ts`) e API routes (`route.test.ts`)
+- Ambiente: `node` (sem jsdom — sem testes de componente React)
+- Localização: `src/**/*.test.{ts,tsx}` co-localizados
+- Cobertura atual: schemas Zod (`form-schemas.test.ts`)
+
+---
+
+## Variáveis de Ambiente
+
+Validadas em `src/lib/env.ts` via Zod. Nunca acessar `process.env` diretamente
+em componentes ou Server Actions — sempre importar de `@/lib/env`.
+
+| Variável                    | Onde usar              |
+| --------------------------- | ---------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`  | server + browser       |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | server + browser   |
+| `SUPABASE_SERVICE_ROLE_KEY` | server apenas (env.ts) |
+
+Exceção: `createBrowserClient` em Client Components usa `process.env.NEXT_PUBLIC_*`
+diretamente (valores NEXT_PUBLIC_ são injetados pelo bundler no client).
 
 ---
 
 ## Direção Futura
 
-As funcionalidades abaixo estão previstas mas **não implementadas**. Ao
-desenvolver, tratar API routes como stubs até confirmação explícita de integração.
+Funcionalidades previstas mas **não implementadas**:
 
-1. **Banco de dados**: Supabase (PostgreSQL). Quando integrado, queries DEVEM
-   ser isoladas em `src/lib/db/` — nunca inline em API routes ou componentes.
+1. **Notificação por e-mail**: Quando uma mensagem de contato chega, disparar e-mail
+   para a equipe via Resend (Supabase Webhook → Edge Function → Resend API).
 
-2. **Newsletter**: A `SiteFooter` já tem o formulário de captura de e-mail (UI
-   completa, estado local). Falta a integração com provedor (Supabase ou outro).
+2. **Doações**: Integração com gateway de pagamento a definir.
+   `src/app/api/doacoes/route.ts` é stub — `DoacoesForm.tsx` já tem UI com nota "em breve".
 
-3. **Cadastro de voluntários** (`/api/voluntario`): Já tem validação Zod. Falta
-   persistência no banco.
-
-4. **Inscrição no cursinho** (`/api/cursinho`): Mesma situação — validação pronta,
-   sem persistência.
-
-5. **Doações** (`/api/doacoes`): Integração com gateway de pagamento não definida.
-   A nota "em breve" já está no `DoacoesForm.tsx`.
-
-6. **Variáveis de ambiente**: Quando o backend for integrado, criar
-   `src/lib/env.ts` com validação Zod de todas as variáveis.
+3. **Reset de senha admin**: Criar rota `/auth/callback` para suportar o fluxo de
+   reset de senha do Supabase Auth (atualmente admin é criado manualmente no Dashboard).
 
 ---
 
 ## O Que NÃO Fazer
 
 - **Nunca usar Pages Router** (`pages/`). Este projeto usa App Router.
-- **Nunca criar arquivos `.css` novos**. Usar Tailwind utilities. Tokens de design
-  ficam exclusivamente em `src/app/globals.css`.
-- **Nunca usar `wrangler.jsonc`**. Arquivo residual — este projeto é Next.js, não
-  TanStack Start.
+- **Nunca criar arquivos `.css` novos**. Usar Tailwind utilities. Tokens ficam
+  exclusivamente em `src/app/globals.css`.
 - **Nunca instalar bibliotecas sem aprovação**. Justificativa obrigatória: problema
   que resolve, alternativa nativa descartada, impacto no bundle.
 - **Nunca usar `useState` para gerenciar estado de formulário**. Usar React Hook Form.
-- **Nunca acessar `process.env` diretamente em componentes**. Centralizar em
-  `src/lib/env.ts` (ainda a ser criado) com validação Zod.
-- **Nunca adicionar lógica de negócio em API routes**. Route handlers DEVEM conter
-  apenas: parse do body + validação Zod + chamada de função + retorno JSON.
+- **Nunca acessar `process.env` diretamente em Server Components ou Server Actions**.
+  Usar `env` importado de `@/lib/env`.
+- **Nunca colocar lógica de banco em Server Actions**. Actions chamam `src/lib/db/`.
+  Actions chamam `src/lib/db/`. DB functions chamam Supabase.
 - **Nunca criar abstrações prematuras**. Três instâncias similares justificam
   extração; uma ou duas, não.
 - **Nunca editar arquivos em `src/components/ui/` manualmente**. São gerenciados
   pelo CLI do shadcn.
 - **Nunca usar `npm` ou `yarn`**. Usar `bun add` / `bun remove`.
+- **Nunca misturar Server Actions e API Routes para a mesma operação**. Formulários
+  públicos usam Server Actions; `doacoes` usa API route até ter gateway integrado.
