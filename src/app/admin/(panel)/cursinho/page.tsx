@@ -24,16 +24,14 @@ export default async function CursinhoAdminPage({ searchParams }: Props) {
     page,
     dateFrom: params.dateFrom,
     dateTo: params.dateTo,
-    city: params.city,
+    search: params.search,
   });
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-3xl font-bold text-primary">Inscrições — Cursinho</h1>
-        <p className="text-foreground/60 text-sm mt-1">
-          {total} inscrição{total !== 1 ? "ões" : ""} no total
-        </p>
+        <p className="text-foreground/60 text-sm mt-1">{total} inscrições no total</p>
       </div>
       <AdminDataTable
         tableName="cursinho_inscricoes"
@@ -41,7 +39,7 @@ export default async function CursinhoAdminPage({ searchParams }: Props) {
         rows={data}
         total={total}
         page={page}
-        showCityFilter
+        searchPlaceholder="Nome, e-mail, telefone ou cidade"
         csvFilename="cursinho-inscricoes.csv"
       />
     </div>

@@ -26,7 +26,7 @@ export default async function VoluntariosAdminPage({ searchParams }: Props) {
     page,
     dateFrom: params.dateFrom,
     dateTo: params.dateTo,
-    city: params.city,
+    search: params.search,
     interest: params.interest,
   });
 
@@ -34,9 +34,7 @@ export default async function VoluntariosAdminPage({ searchParams }: Props) {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-3xl font-bold text-primary">Voluntários</h1>
-        <p className="text-foreground/60 text-sm mt-1">
-          {total} voluntário{total !== 1 ? "s" : ""} no total
-        </p>
+        <p className="text-foreground/60 text-sm mt-1">{total} voluntários no total</p>
       </div>
       <AdminDataTable
         tableName="voluntarios"
@@ -44,7 +42,7 @@ export default async function VoluntariosAdminPage({ searchParams }: Props) {
         rows={data}
         total={total}
         page={page}
-        showCityFilter
+        searchPlaceholder="Nome, e-mail, telefone ou cidade"
         showInterestFilter
         csvFilename="voluntarios.csv"
       />
