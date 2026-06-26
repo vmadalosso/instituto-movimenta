@@ -12,12 +12,12 @@ const HIGHLIGHTS = [
   {
     icon: Users,
     title: "Para quem?",
-    text: "Pessoas de baixa renda que sonham com a universidade pública.",
+    text: "Pessoas que sonham em entrar na universidade.",
   },
   {
     icon: Clock,
     title: "Quando?",
-    text: "Aulas durante a semana, à noite, e oficinas aos sábados.",
+    text: "Aos sábados de manhã, com inicio dia 04 de Julho.",
   },
   {
     icon: Heart,
@@ -36,7 +36,7 @@ export default function Cursinho() {
             Universidade é <span className="text-accent">para todo mundo</span>.
           </>
         }
-        subtitle="Cursinho pré-vestibular popular, gratuito, organizado por professoras, professores e estudantes voluntários do Movimenta."
+        subtitle="Cursinho pré-vestibular popular, gratuito, organizado por professoras, professores e estudantes voluntários(as) do Movimenta."
       />
 
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 grid lg:grid-cols-3 gap-6">
