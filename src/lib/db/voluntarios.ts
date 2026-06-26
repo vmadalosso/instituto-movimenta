@@ -23,7 +23,7 @@ type DbListOptions = {
   pageSize?: number;
   dateFrom?: string;
   dateTo?: string;
-  city?: string;
+  search?: string;
   interest?: string;
 };
 
@@ -46,7 +46,7 @@ export async function insertVoluntario(data: VoluntarioInsert): Promise<ActionRe
 export async function listVoluntarios(
   opts: DbListOptions = {},
 ): Promise<{ data: VoluntarioRow[]; total: number }> {
-  const { page = 1, pageSize = 50, dateFrom, dateTo, city, interest } = opts;
+  const { page = 1, pageSize = 50, dateFrom, dateTo, search, interest } = opts;
   const supabase = await createServerSupabaseClient();
   let query = supabase
     .from("voluntarios")
@@ -55,7 +55,10 @@ export async function listVoluntarios(
     .range((page - 1) * pageSize, page * pageSize - 1);
   if (dateFrom) query = query.gte("created_at", dateFrom);
   if (dateTo) query = query.lte("created_at", dateTo + "T23:59:59");
-  if (city) query = query.ilike("city", `%${city}%`);
+  if (search)
+    query = query.or(
+      `name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%,city.ilike.%${search}%`,
+    );
   if (interest) query = query.ilike("interest", `%${interest}%`);
   const { data, count } = await query;
   return { data: data ?? [], total: count ?? 0 };

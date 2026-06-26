@@ -22,7 +22,7 @@ export type DbListOptions = {
   pageSize?: number;
   dateFrom?: string;
   dateTo?: string;
-  city?: string;
+  search?: string;
 };
 
 export async function insertCursinho(data: CursinhoInsert): Promise<ActionResult> {
@@ -44,7 +44,7 @@ export async function insertCursinho(data: CursinhoInsert): Promise<ActionResult
 export async function listCursinho(
   opts: DbListOptions = {},
 ): Promise<{ data: CursinhoRow[]; total: number }> {
-  const { page = 1, pageSize = 50, dateFrom, dateTo, city } = opts;
+  const { page = 1, pageSize = 50, dateFrom, dateTo, search } = opts;
   const supabase = await createServerSupabaseClient();
   let query = supabase
     .from("cursinho_inscricoes")
@@ -53,7 +53,10 @@ export async function listCursinho(
     .range((page - 1) * pageSize, page * pageSize - 1);
   if (dateFrom) query = query.gte("created_at", dateFrom);
   if (dateTo) query = query.lte("created_at", dateTo + "T23:59:59");
-  if (city) query = query.ilike("city", `%${city}%`);
+  if (search)
+    query = query.or(
+      `name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%,city.ilike.%${search}%`,
+    );
   const { data, count } = await query;
   return { data: data ?? [], total: count ?? 0 };
 }

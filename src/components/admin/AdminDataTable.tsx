@@ -14,6 +14,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { deleteRecord, toggleLida } from "@/lib/actions/admin";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 
@@ -32,7 +39,7 @@ type Props = {
   total: number;
   page: number;
   pageSize?: number;
-  showCityFilter?: boolean;
+  searchPlaceholder?: string;
   showInterestFilter?: boolean;
   showLidaToggle?: boolean;
   csvFilename: string;
@@ -81,7 +88,7 @@ export default function AdminDataTable({
   total,
   page,
   pageSize = 50,
-  showCityFilter,
+  searchPlaceholder,
   showInterestFilter,
   showLidaToggle,
   csvFilename,
@@ -141,26 +148,38 @@ export default function AdminDataTable({
             onChange={(e) => updateParam("dateTo", e.target.value)}
           />
         </div>
-        {showCityFilter && (
+        {searchPlaceholder && (
           <div className="space-y-1">
-            <label className="text-xs text-foreground/60 font-medium">Cidade</label>
+            <label className="text-xs text-foreground/60 font-medium">Buscar</label>
             <Input
-              placeholder="Filtrar por cidade"
-              className="w-44 text-sm"
-              defaultValue={searchParams.get("city") ?? ""}
-              onChange={(e) => updateParam("city", e.target.value)}
+              placeholder={searchPlaceholder}
+              className="w-64 text-sm"
+              defaultValue={searchParams.get("search") ?? ""}
+              onChange={(e) => updateParam("search", e.target.value)}
             />
           </div>
         )}
         {showInterestFilter && (
           <div className="space-y-1">
-            <label className="text-xs text-foreground/60 font-medium">Interesse</label>
-            <Input
-              placeholder="Filtrar por interesse"
-              className="w-44 text-sm"
-              defaultValue={searchParams.get("interest") ?? ""}
-              onChange={(e) => updateParam("interest", e.target.value)}
-            />
+            <label className="text-xs text-foreground/60 font-medium">Filtrar por interesse</label>
+            <Select
+              value={searchParams.get("interest") ?? ""}
+              onValueChange={(value) => updateParam("interest", value === "all" ? "" : value)}
+            >
+              <SelectTrigger className="w-44 text-sm">
+                <SelectValue placeholder="Todos" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Educação">Educação</SelectItem>
+                <SelectItem value="Cultura">Cultura</SelectItem>
+                <SelectItem value="Lazer">Lazer</SelectItem>
+                <SelectItem value="Solidariedade">Solidariedade</SelectItem>
+                <SelectItem value="Meio ambiente">Meio ambiente</SelectItem>
+                <SelectItem value="Comunicação">Comunicação</SelectItem>
+                <SelectItem value="Outro">Outro</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )}
         <Button
