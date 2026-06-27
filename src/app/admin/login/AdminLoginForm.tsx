@@ -48,7 +48,7 @@ export default function AdminLoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="admin@institutomovimenta.org"
+          placeholder="seu@email.com"
         />
       </div>
 
