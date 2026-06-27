@@ -1,6 +1,9 @@
 import AdminLoginForm from "./AdminLoginForm";
 
-export const metadata = { title: "Admin — Login | Instituto Movimenta" };
+export const metadata = {
+  title: "Admin — Login | Instituto Movimenta",
+  robots: { index: false, follow: false },
+};
 
 export default function AdminLoginPage() {
   return (
