@@ -93,11 +93,11 @@ export function SiteFooter() {
                   Voluntariado
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/doacoes" className="hover:text-accent">
                   Doações
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
