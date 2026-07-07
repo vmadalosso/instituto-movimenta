@@ -13,6 +13,16 @@ A constituição do projeto está em `.specify/memory/constitution.md`.
 
 ---
 
+## Status do Projeto
+
+O site está em produção (institutomovimenta.org) e **100% funcional**: todos os
+formulários públicos (contato, cursinho, voluntário, newsletter) e o painel admin
+para tratamento dos dados recebidos estão completos e operando normalmente.
+
+**Única pendência**: Doações — ver [Doações — Direção Futura](#doações--direção-futura).
+
+---
+
 ## Stack
 
 | Tecnologia          | Versão         | Papel                                              |
@@ -75,7 +85,7 @@ src/
 │   │       ├── page.tsx
 │   │       └── AdminLoginForm.tsx # Client Component de login
 │   ├── api/                      # Route Handlers — apenas doacoes (stub)
-│   │   └── doacoes/route.ts      # Stub — gateway de pagamento não integrado
+│   │   └── doacoes/route.ts      # Stub — única pendência do projeto, ver Direção Futura
 │   ├── contato/
 │   │   ├── ContatoForm.tsx       # Client Component — Server Action
 │   │   └── page.tsx
@@ -83,7 +93,7 @@ src/
 │   │   ├── CursinhoForm.tsx
 │   │   └── page.tsx
 │   ├── doacoes/
-│   │   ├── DoacoesForm.tsx       # Sem integração — em breve
+│   │   ├── DoacoesForm.tsx       # Sem integração — ver Direção Futura
 │   │   └── page.tsx
 │   ├── cidades/page.tsx
 │   ├── projetos/page.tsx
@@ -301,17 +311,28 @@ diretamente (valores NEXT_PUBLIC_ são injetados pelo bundler no client).
 
 ---
 
-## Direção Futura
+## Doações — Direção Futura
 
-Funcionalidades previstas mas **não implementadas**:
+Única pendência do projeto. `src/app/api/doacoes/route.ts` é stub e `DoacoesForm.tsx`
+tem UI com nota "em breve". Dois caminhos em avaliação:
+
+1. **Checkout integrado**: integração com gateway de pagamento a definir — seguirá
+   este caminho apenas se a integração não for muito complexa.
+2. **Sem checkout** (caminho mais provável): substituir o formulário por uma tela
+   estática em `/doacoes` com chave PIX, dados bancários para transferência e outras
+   formas de doação, sem processar pagamento no site.
+
+Se o caminho 2 for escolhido, `DoacoesForm.tsx` e `src/app/api/doacoes/route.ts`
+devem ser removidos e o conteúdo (PIX/dados bancários) vira estático em `page.tsx` —
+nesse caso a exceção de API route para doações (ver "O Que NÃO Fazer") deixa de existir.
+
+## Melhorias Futuras Possíveis (sem prioridade definida)
+
+Não são pendências ativas — apenas ideias registradas para eventual retomada:
 
 1. **Notificação por e-mail**: Quando uma mensagem de contato chega, disparar e-mail
    para a equipe via Resend (Supabase Webhook → Edge Function → Resend API).
-
-2. **Doações**: Integração com gateway de pagamento a definir.
-   `src/app/api/doacoes/route.ts` é stub — `DoacoesForm.tsx` já tem UI com nota "em breve".
-
-3. **Reset de senha admin**: Criar rota `/auth/callback` para suportar o fluxo de
+2. **Reset de senha admin**: Criar rota `/auth/callback` para suportar o fluxo de
    reset de senha do Supabase Auth (atualmente admin é criado manualmente no Dashboard).
 
 ---

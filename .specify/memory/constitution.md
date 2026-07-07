@@ -1,31 +1,28 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: N/A (template) → 1.0.0
-Type of bump: Initial ratification (MAJOR — baseline governance established)
+Version change: 1.1.0 → 1.2.0
+Type of bump: MINOR — clarification of Doações direction under Principle IV
 
-Added sections:
-  - Core Principles (5 principles)
-  - Restrições Explícitas
-  - Fluxo de Desenvolvimento
-  - Governance
+Modified principles:
+  - IV. Backend e Camadas de Acesso a Dados — clarified that `src/app/api/doacoes/route.ts`
+    resolves one of two ways: payment gateway integration (if not overly complex) or
+    removal in favor of static PIX/bank-transfer content on `/doacoes`, no checkout.
 
-Modified principles: N/A (initial version)
-Removed sections: N/A (initial version)
+Added/Removed sections: N/A
+
+Context: Project is in production and functionally complete (public forms + admin panel).
+Doações is the only pending item; CLAUDE.md "Doações — Direção Futura" documents the two
+candidate paths in more detail.
 
 Templates reviewed:
-  - .specify/templates/plan-template.md ✅ Compatible — Constitution Check section is
-    driven by this file at runtime; no structural changes needed.
-  - .specify/templates/spec-template.md ✅ Compatible — generic enough; FR/SC format
-    aligns with principle-driven requirements.
-  - .specify/templates/tasks-template.md ✅ Compatible — task phasing aligns with
-    progressive backend evolution principle.
+  - .specify/templates/plan-template.md ✅ Compatible — no structural changes needed.
+  - .specify/templates/spec-template.md ✅ Compatible.
+  - .specify/templates/tasks-template.md ✅ Compatible.
 
 Deferred TODOs:
-  - RATIFICATION_DATE is set to first authoring date (2026-06-12); update if
-    the team establishes a formal ratification ceremony.
-  - Payment gateway integration not yet specified — no principle covers it yet;
-    add when direction is confirmed.
+  - Final Doações path (gateway vs. static PIX/transfer) still undecided — amend this
+    principle again once chosen.
 -->
 
 # Instituto Movimenta — Constituição do Projeto
@@ -128,8 +125,10 @@ Princípios:
   componentes ou layouts.
 - **Server Actions para mutações**: Formulários públicos e operações do admin usam
   Server Actions em `src/lib/actions/`. Nunca misturar com API routes na mesma operação.
-- **API routes apenas quando necessário**: Apenas `src/app/api/doacoes/route.ts`
-  permanece como stub até o gateway de pagamento ser definido.
+- **API routes apenas quando necessário**: `src/app/api/doacoes/route.ts` permanece
+  como stub até a direção de doações ser definida — ou recebe integração de gateway
+  de pagamento (se viável sem complexidade excessiva), ou é removido em favor de
+  conteúdo estático em `/doacoes` (chave PIX, dados bancários), sem checkout no site.
 - **Variáveis de ambiente**: Validadas com Zod em `src/lib/env.ts`. Nunca acessar
   `process.env` diretamente em Server Components ou Server Actions.
 - **Auth do admin**: Supabase Auth com sessões de 7 dias. Middleware Next.js protege
@@ -213,4 +212,4 @@ instruções de contexto para o agente de desenvolvimento.
 
 ---
 
-**Version**: 1.1.0 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-06-24
+**Version**: 1.2.0 | **Ratified**: 2026-06-12 | **Last Amended**: 2026-07-07
