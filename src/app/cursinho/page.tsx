@@ -17,7 +17,7 @@ const HIGHLIGHTS = [
   {
     icon: Clock,
     title: "Quando?",
-    text: "Aos sábados de manhã, com inicio dia 04 de Julho.",
+    text: "Aos sábados de manhã, com início dia 11 de Julho.",
   },
   {
     icon: Heart,
