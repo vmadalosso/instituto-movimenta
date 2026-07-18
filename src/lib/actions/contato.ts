@@ -6,7 +6,7 @@ import { insertContato } from "@/lib/db/contato";
 type ActionResult = { success: true; message: string } | { success: false; message: string };
 
 export async function submitContato(
-  data: { name: string; email: string; subject: string; message: string },
+  data: { name: string; email: string; phone: string; subject: string; message: string },
   honeypot: string,
 ): Promise<ActionResult> {
   if (honeypot) return { success: true, message: "" };

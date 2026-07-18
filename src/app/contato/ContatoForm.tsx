@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Textarea } from "@/components/ui";
 import { ContatoFormValues, contatoSchema } from "@/lib/form-schemas";
+import { maskBrPhone } from "@/lib/utils";
 import { submitContato } from "@/lib/actions/contato";
 
 export default function ContatoForm() {
@@ -22,6 +23,7 @@ export default function ContatoForm() {
     defaultValues: {
       name: "",
       email: "",
+      phone: "",
       subject: "",
       message: "",
       consent: false,
@@ -84,6 +86,24 @@ export default function ContatoForm() {
               <Input type="email" placeholder="E-mail" {...register("email")} />
               {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
             </div>
+          </div>
+
+          <div className="space-y-2">
+            {(() => {
+              const { onChange, ...field } = register("phone");
+              return (
+                <Input
+                  {...field}
+                  type="tel"
+                  placeholder="Telefone/WhatsApp — (51) 99999-9999"
+                  onChange={(e) => {
+                    e.target.value = maskBrPhone(e.target.value);
+                    onChange(e);
+                  }}
+                />
+              );
+            })()}
+            {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
           </div>
 
           <div className="space-y-2">

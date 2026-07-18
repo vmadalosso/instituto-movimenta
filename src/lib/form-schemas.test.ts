@@ -6,6 +6,7 @@ describe("form schemas", () => {
     const result = contatoSchema.safeParse({
       name: "Maria",
       email: "maria@example.com",
+      phone: "51999999999",
       subject: "Parceria",
       message: "Gostaria de conversar sobre uma parceria comunitária.",
       consent: true,
@@ -18,6 +19,7 @@ describe("form schemas", () => {
     const result = contatoSchema.safeParse({
       name: "Maria",
       email: "maria@example.com",
+      phone: "51999999999",
       subject: "Parceria",
       message: "Gostaria de conversar sobre uma parceria comunitária.",
       consent: false,
@@ -30,6 +32,7 @@ describe("form schemas", () => {
     const result = contatoSchema.safeParse({
       name: "Maria",
       email: "maria-at-example.com",
+      phone: "51999999999",
       subject: "Parceria",
       message: "Mensagem válida.",
       consent: true,
@@ -37,6 +40,19 @@ describe("form schemas", () => {
 
     expect(result.success).toBe(false);
     expect(result.success ? null : result.error.issues[0].path).toEqual(["email"]);
+  });
+
+  it("rejects contato schema with invalid phone number", () => {
+    const result = contatoSchema.safeParse({
+      name: "Maria",
+      email: "maria@example.com",
+      phone: "123",
+      subject: "Parceria",
+      message: "Gostaria de conversar sobre uma parceria comunitária.",
+      consent: true,
+    });
+
+    expect(result.success).toBe(false);
   });
 
   it("validates cursinho schema with valid data", () => {
