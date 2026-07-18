@@ -4,6 +4,7 @@ export type ContatoRow = {
   id: string;
   name: string;
   email: string;
+  phone: string | null;
   subject: string;
   message: string;
   lida: boolean;

@@ -4,9 +4,21 @@ const consent = z.boolean().refine((v) => v === true, {
   message: "Você precisa aceitar para continuar.",
 });
 
+const phone = z
+  .string()
+  .min(1, "WhatsApp obrigatório")
+  .refine(
+    (val) => {
+      const digits = val.replace(/\D/g, "");
+      return digits.length === 10 || digits.length === 11;
+    },
+    { message: "Número inválido — inclua DDD (ex: (51) 99999-9999)" },
+  );
+
 export const contatoSchema = z.object({
   name: z.string().min(2, "Digite seu nome"),
   email: z.string().email("E-mail inválido"),
+  phone,
   subject: z.string().min(5, "Informe um assunto"),
   message: z.string().min(10, "Escreva sua mensagem"),
   consent,
@@ -15,16 +27,7 @@ export const contatoSchema = z.object({
 export const cursinhoSchema = z.object({
   name: z.string().min(2, "Digite seu nome completo"),
   email: z.string().email("E-mail inválido"),
-  phone: z
-    .string()
-    .min(1, "WhatsApp obrigatório")
-    .refine(
-      (val) => {
-        const digits = val.replace(/\D/g, "");
-        return digits.length === 10 || digits.length === 11;
-      },
-      { message: "Número inválido — inclua DDD (ex: (51) 99999-9999)" },
-    ),
+  phone,
   city: z.string().min(2, "Informe sua cidade"),
   state: z.string().min(2, "Informe seu estado"),
   neighborhood: z.string().min(2, "Informe seu bairro"),
@@ -40,16 +43,7 @@ export const doacoesSchema = z.object({
 export const voluntarioSchema = z.object({
   name: z.string().min(2, "Digite seu nome completo"),
   email: z.string().email("E-mail inválido"),
-  phone: z
-    .string()
-    .min(1, "WhatsApp obrigatório")
-    .refine(
-      (val) => {
-        const digits = val.replace(/\D/g, "");
-        return digits.length === 10 || digits.length === 11;
-      },
-      { message: "Número inválido — inclua DDD (ex: (51) 99999-9999)" },
-    ),
+  phone,
   city: z.string().min(2, "Informe sua cidade"),
   state: z.string().min(2, "Informe seu estado"),
   instagram: z.string().optional(),

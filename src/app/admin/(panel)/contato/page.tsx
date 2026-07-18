@@ -7,6 +7,7 @@ const COLUMNS = [
   { key: "created_at", label: "Data" },
   { key: "name", label: "Nome" },
   { key: "email", label: "E-mail" },
+  { key: "phone", label: "WhatsApp" },
   { key: "subject", label: "Assunto" },
   { key: "message", label: "Mensagem" },
 ];
