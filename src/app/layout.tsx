@@ -14,6 +14,10 @@ export const metadata: Metadata = {
       "ONG do Rio Grande do Sul que atua em solidariedade, educação, esporte, cultura e lazer.",
     type: "website",
   },
+  // A imagem vem de src/app/opengraph-image.jpg; aqui só pedimos o cartão grande no X/Twitter.
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
