@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Instituto Movimenta — A saída é coletiva",
   description:
     "ONG do Rio Grande do Sul que atua em solidariedade, educação, esporte, cultura e lazer.",
-  metadataBase: new URL("https://institutomovimenta.org"),
+  metadataBase: new URL("https://www.institutomovimenta.org"),
   openGraph: {
     title: "Instituto Movimenta — A saída é coletiva",
     description:
